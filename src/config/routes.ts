@@ -1,0 +1,15 @@
+export const routes = {
+  home: "/",
+  blogs: "/blogs",
+  blog: (slug: string) => `/blogs/${slug}`,
+  books: "/books",
+  book: (slug: string) => `/books/${slug}`,
+  products: "/products",
+  product: (slug: string) => `/products/${slug}`,
+  playlists: "/playlists",
+  celebrations: "/celebrations",
+  profile: "/profile",
+  saved: "/saved",
+  login: "/login",
+  admin: "/admin",
+} as const;
