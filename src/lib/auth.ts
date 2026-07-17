@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
+import { authConfig } from "@/lib/auth.config";
 import type { Role } from "@prisma/client";
 
 declare module "next-auth" {
@@ -28,9 +29,9 @@ declare module "@auth/core/jwt" {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
-  trustHost: true,
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
@@ -38,6 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -57,16 +59,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       return token;
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = typeof token.id === "string" ? token.id : "";
-        session.user.role =
-          token.role === "ADMIN" || token.role === "USER"
-            ? token.role
-            : "USER";
-      }
-      return session;
-    },
   },
   events: {
     async createUser({ user }) {
@@ -78,8 +70,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
       }
     },
-  },
-  pages: {
-    signIn: "/login",
   },
 });
