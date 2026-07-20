@@ -14,6 +14,7 @@ import { getFeaturedPlaylists } from "@/features/spotify/services/playlist.servi
 import { getVisibleCelebrations } from "@/features/celebration/services/celebration.service";
 import { siteConfig } from "@/config/site";
 import { format } from "date-fns";
+import Home from "./home/home";
 
 export const revalidate = 60;
 
@@ -38,7 +39,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-border bg-[linear-gradient(180deg,#ffffff_0%,#d3defa55_55%,#ffffff_100%)]">
+      {/* <section className="relative overflow-hidden border-b border-border bg-[linear-gradient(180deg,#ffffff_0%,#d3defa55_55%,#ffffff_100%)]">
         <Container className="flex min-h-[78vh] flex-col justify-center py-16 sm:py-20">
           <p className="mb-4 text-sm uppercase tracking-[0.18em] text-muted">
             Personal brand platform
@@ -58,7 +59,8 @@ export default async function HomePage() {
             </ButtonLink>
           </div>
         </Container>
-      </section>
+      </section> */}
+      <Home/>
 
       <Section>
         <Container>

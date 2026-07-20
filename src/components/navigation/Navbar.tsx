@@ -3,6 +3,7 @@ import { auth, signIn, signOut } from "@/lib/auth";
 import { Container } from "@/components/layout/Container";
 import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/Button";
+import { ClockBadge } from "@/components/navigation/ClockBadge";
 
 const links = [
   { href: "/blogs", label: "Blogs" },
@@ -38,6 +39,7 @@ export async function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <ClockBadge />
           {session?.user ? (
             <>
               <Link
@@ -53,10 +55,7 @@ export async function Navbar() {
                 Profile
               </Link>
               {session.user.role === "ADMIN" ? (
-                <Link
-                  href="/admin"
-                  className="text-sm text-link no-underline"
-                >
+                <Link href="/admin" className="text-sm text-link no-underline">
                   Admin
                 </Link>
               ) : null}
