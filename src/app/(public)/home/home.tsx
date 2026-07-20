@@ -106,7 +106,7 @@ function FloatingImg({
       <Image
         src={src}
         alt={alt}
-        className={`select-none object-contain mix-blend-screen ${className ?? ""}`}
+        className={`select-none object-contain ${className ?? ""}`}
         draggable={false}
         sizes="(max-width: 1024px) 120px, 420px"
       />
@@ -216,7 +216,7 @@ function MobileFloatingRow() {
           src={it.src}
           alt={it.alt}
           draggable={false}
-          className={`h-12 w-auto select-none object-contain mix-blend-screen drop-shadow-[0_10px_16px_rgba(40,55,110,0.16)] sm:h-14 ${
+          className={`h-12 w-auto select-none object-contain  drop-shadow-[0_10px_16px_rgba(40,55,110,0.16)] sm:h-14 ${
             i % 2 === 0 ? "animate-float-medium" : "animate-float-fast"
           }`}
           sizes="56px"
