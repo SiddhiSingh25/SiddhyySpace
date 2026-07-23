@@ -15,6 +15,10 @@ import { getVisibleCelebrations } from "@/features/celebration/services/celebrat
 import { siteConfig } from "@/config/site";
 import { format } from "date-fns";
 import Home from "./home/home";
+import { FloatingText } from "@/components/ui/FloatingText";
+import avatar from "@/assets/profile/profile.png"
+import About from "./home/about";
+
 
 export const revalidate = 60;
 
@@ -39,38 +43,11 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* <section className="relative overflow-hidden border-b border-border bg-[linear-gradient(180deg,#ffffff_0%,#d3defa55_55%,#ffffff_100%)]">
-        <Container className="flex min-h-[78vh] flex-col justify-center py-16 sm:py-20">
-          <p className="mb-4 text-sm uppercase tracking-[0.18em] text-muted">
-            Personal brand platform
-          </p>
-          <Heading as="h1" className="max-w-3xl text-balance">
-            {hero?.headline ?? siteConfig.name}
-          </Heading>
-          <Text className="mt-5 max-w-xl text-lg text-muted">
-            {hero?.subheading ?? siteConfig.description}
-          </Text>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href={hero?.ctaHref || "/blogs"} size="lg">
-              {hero?.ctaLabel || "Read the latest"}
-            </ButtonLink>
-            <ButtonLink href="/books" variant="outline" size="lg">
-              Explore books
-            </ButtonLink>
-          </div>
-        </Container>
-      </section> */}
-      <Home/>
 
-      <Section>
-        <Container>
-          <Heading as="h2">About</Heading>
-          <Text className="mt-4 max-w-2xl text-muted">
-            {about?.biography ??
-              "This is a calm space for writing, recommendations, and documenting the journey — quietly and with care."}
-          </Text>
-        </Container>
-      </Section>
+      <Home />
+      <About />
+
+
 
       <Section className="bg-surface/40">
         <Container>

@@ -216,9 +216,8 @@ function MobileFloatingRow() {
           src={it.src}
           alt={it.alt}
           draggable={false}
-          className={`h-12 w-auto select-none object-contain  drop-shadow-[0_10px_16px_rgba(40,55,110,0.16)] sm:h-14 ${
-            i % 2 === 0 ? "animate-float-medium" : "animate-float-fast"
-          }`}
+          className={`h-12 w-auto select-none object-contain  drop-shadow-[0_10px_16px_rgba(40,55,110,0.16)] sm:h-14 ${i % 2 === 0 ? "animate-float-medium" : "animate-float-fast"
+            }`}
           sizes="56px"
         />
       ))}
@@ -234,26 +233,18 @@ export default function Home() {
   ]);
 
   return (
-    <section className="relative overflow-hidden border-b border-[#dce4f5] bg-[linear-gradient(165deg,#ffffff_0%,#eef2fb_42%,#d3defa66_72%,#ffffff_100%)] text-[#1b1c1b]">
+    <section className="relative  overflow-hidden border-b border-[#dce4f5] bg-[linear-gradient(165deg,#ffffff_0%,#eef2fb_42%,#d3defa66_72%,#ffffff_100%)] text-[#1b1c1b]">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_20%,rgba(211,222,250,0.55),transparent_55%),radial-gradient(ellipse_at_85%_15%,rgba(74,98,176,0.08),transparent_45%)]"
       />
 
-      <div className="relative mx-auto flex max-w-6xl items-center justify-center gap-4 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:justify-between lg:pt-16">
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center gap-4 px-5 pb-20 pt-14 sm:px-8 sm:pt-20 lg:justify-between lg:pt-32">
         <DesktopFloatingLeft />
 
         <div className="flex max-w-xl flex-col items-center text-center">
-          <div className="mb-5 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center rounded-full border border-[#c5d0ef] bg-white/80 px-3.5 py-1.5 text-[12px] uppercase tracking-[0.16em] text-[#5a6280] shadow-sm backdrop-blur-sm">
-              Personal brand
-            </span>
-            <ClockBadge />
-          </div>
 
-          <p className="font-display text-[42px] leading-none tracking-tight text-[#4a62b0] sm:text-[56px]">
-            {siteConfig.name}
-          </p>
+
 
           <h1 className="mt-4 font-display text-[28px] leading-[1.2] text-[#1b1c1b] sm:text-[36px]">
             A calm space for thoughtful work
@@ -276,27 +267,17 @@ export default function Home() {
               href="/blogs"
               className="inline-flex items-center rounded-full bg-[#4a62b0] px-6 py-3 text-[15px] font-medium text-white no-underline shadow-[0_10px_24px_rgba(74,98,176,0.28)] transition hover:bg-[#3a4f96] hover:text-white"
             >
-              Read the latest
+              Say hii!
             </Link>
-            <Link
+            {/* <Link
               href="/books"
               className="inline-flex items-center rounded-full border border-[#b8c5e8] bg-white/80 px-6 py-3 text-[15px] font-medium text-[#3a4f96] no-underline backdrop-blur-sm transition hover:border-[#4a62b0] hover:bg-white hover:text-[#3a4f96]"
             >
               Explore books
-            </Link>
+            </Link> */}
           </div>
 
-          <nav className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px] text-[#6b6e6a]">
-            {NAV_LINKS.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="text-[#5a6280] no-underline transition hover:text-[#4a62b0]"
-              >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
+
         </div>
 
         <DesktopFloatingRight />
