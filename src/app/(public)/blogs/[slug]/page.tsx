@@ -63,27 +63,27 @@ export default async function BlogDetailPage({ params }: Props) {
   };
 
   return (
-    <Section>
-      <Container className="max-w-3xl">
+    <Section className="py-6 sm:py-10 lg:py-12">
+      <Container className="max-w-3xl mx-auto px-4 sm:px-6">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {blog.category ? (
-          <p className="text-sm uppercase tracking-wide text-muted">
+          <p className="text-xs sm:text-sm uppercase tracking-wide text-muted">
             {blog.category.name}
           </p>
         ) : null}
-        <Heading as="h1" className="mt-2 text-balance">
+        <Heading as="h1" className="mt-2 text-balance text-2xl sm:text-4xl md:text-5xl">
           {blog.title}
         </Heading>
-        <Text muted className="mt-4">
+        <Text muted className="mt-3 sm:mt-4 text-xs sm:text-sm">
           {blog.publishedAt ? format(blog.publishedAt, "MMMM d, yyyy") : ""} ·{" "}
           {blog.readingTime} min read
         </Text>
         {blog.coverImage ? (
           <div
-            className="mt-8 aspect-[16/9] rounded-2xl bg-primary/40"
+            className="mt-6 sm:mt-8 aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-2xl bg-primary/40 overflow-hidden"
             style={{
               backgroundImage: `url(${blog.coverImage})`,
               backgroundSize: "cover",
@@ -92,7 +92,7 @@ export default async function BlogDetailPage({ params }: Props) {
           />
         ) : null}
 
-        <div className="prose-blog mt-10">
+        <div className="prose-blog mt-8 sm:mt-10">
           <TiptapRenderer content={blog.content} />
         </div>
 
@@ -103,9 +103,9 @@ export default async function BlogDetailPage({ params }: Props) {
         />
 
         {related.length > 0 ? (
-          <div className="mt-16">
-            <Heading as="h2">Related articles</Heading>
-            <div className="mt-6 grid gap-6">
+          <div className="mt-12 sm:mt-16">
+            <Heading as="h2" className="text-xl sm:text-2xl">Related articles</Heading>
+            <div className="mt-6 grid gap-6 sm:grid-cols-2">
               {related.map((item) => (
                 <BlogCard key={item.id} blog={item} />
               ))}

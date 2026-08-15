@@ -7,10 +7,10 @@ type HeadingProps = {
 };
 
 const sizes = {
-  h1: "font-display text-4xl leading-tight tracking-tight sm:text-5xl",
-  h2: "font-display text-3xl leading-snug tracking-tight sm:text-4xl",
-  h3: "font-display text-2xl leading-snug sm:text-3xl",
-  h4: "font-display text-xl leading-snug sm:text-2xl",
+  h1: "font-display text-2xl leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-6xl",
+  h2: "font-display text-xl leading-snug tracking-tight sm:text-3xl md:text-4xl",
+  h3: "font-display text-lg leading-snug sm:text-2xl md:text-3xl",
+  h4: "font-display text-base leading-snug sm:text-xl md:text-2xl",
 };
 
 export function Heading({ as = "h2", children, className }: HeadingProps) {

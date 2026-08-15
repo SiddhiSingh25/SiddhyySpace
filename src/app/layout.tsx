@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Literata } from "next/font/google";
+import { DM_Sans, Literata, Great_Vibes } from "next/font/google";
 import { Providers } from "@/providers/Providers";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
@@ -12,6 +12,13 @@ const literata = Literata({
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const greatVibes = Great_Vibes({
+  weight: "400",
+  variable: "--font-great-vibes",
   subsets: ["latin"],
   display: "swap",
 });
@@ -46,8 +53,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${literata.variable} ${dmSans.variable} h-full antialiased`}
+      className={`${literata.variable} ${dmSans.variable} ${greatVibes.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Providers>{children}</Providers>
       </body>
