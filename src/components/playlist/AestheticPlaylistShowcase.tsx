@@ -4,14 +4,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-import discoBallSvg from "@/assets/playlist/disco-ball.svg";
-import vinylSvg from "@/assets/playlist/vinyl.svg";
-import lipsSvg from "@/assets/playlist/lips.svg";
-import heartsSvg from "@/assets/playlist/hearts.svg";
-import starsSvg from "@/assets/playlist/stars.svg";
-import cassetteSvg from "@/assets/playlist/cassette.svg";
-import spotifyLogoSvg from "@/assets/playlist/spotify-logo.svg";
-import defaultCoverSvg from "@/assets/playlist/cover-art.svg";
+import audioCDImg from "@/assets/playlist/audioCD.png";
+import cherryImg from "@/assets/playlist/cherry.jpg";
+import headphoneImg from "@/assets/playlist/headphone.jpg";
+import tapeRecorderImg from "@/assets/playlist/tapeRecorder.jpg";
 
 export interface PlaylistData {
   id?: string;
@@ -55,111 +51,79 @@ export function AestheticPlaylistShowcase({
           <div className="lg:col-span-7 flex justify-center py-6">
             <div className="relative max-w-sm sm:max-w-md w-full">
               
-              {/* STICKER 1: Hanging Disco Ball (Top Left) */}
+              {/* STICKER 1: Floating & Rotating Audio CD (Top Left) */}
               <motion.div
                 initial={{ y: -10, rotate: -4 }}
-                animate={{ y: [0, -8, 0], rotate: [-4, 2, -4] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-14 sm:-top-20 -left-6 sm:-left-10 z-30 w-24 sm:w-32 drop-shadow-xl pointer-events-none"
+                animate={{
+                  y: [0, -8, 0],
+                  rotate: isPlaying ? [0, 360] : [-4, 4, -4],
+                }}
+                transition={
+                  isPlaying
+                    ? { duration: 5, repeat: Infinity, ease: "linear" }
+                    : { duration: 4, repeat: Infinity, ease: "easeInOut" }
+                }
+                className="absolute -top-12 sm:-top-16 -left-6 sm:-left-10 z-30 w-24 sm:w-32 drop-shadow-2xl pointer-events-none"
               >
                 <Image
-                  src={discoBallSvg}
-                  alt="Disco Ball"
+                  src={audioCDImg}
+                  alt="Audio CD"
                   width={140}
-                  height={170}
-                  className="w-full h-auto object-contain"
+                  height={140}
+                  className="w-full h-auto object-contain filter drop-shadow-lg"
                   priority
                 />
               </motion.div>
 
-              {/* STICKER 2: Vinyl Record + Lips (Top Right) */}
+              {/* STICKER 2: Cherry Photo Badge (Top Right) */}
               <motion.div
                 initial={{ rotate: 12 }}
-                animate={{ rotate: [12, 18, 12] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-6 sm:-top-8 -right-4 sm:-right-8 z-20 flex items-center justify-center drop-shadow-lg"
+                animate={{ rotate: [12, 18, 12], y: [0, -4, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-6 sm:-top-8 -right-4 sm:-right-8 z-30 drop-shadow-xl"
               >
-                <div className="relative">
-                  {/* Rotating Vinyl Disc */}
-                  <motion.div
-                    animate={{ rotate: isPlaying ? 360 : [0, 5, 0] }}
-                    transition={
-                      isPlaying
-                        ? { duration: 3, repeat: Infinity, ease: "linear" }
-                        : { duration: 5, repeat: Infinity, ease: "easeInOut" }
-                    }
-                    className="w-20 sm:w-28 h-20 sm:h-28"
-                  >
-                    <Image
-                      src={vinylSvg}
-                      alt="Vinyl Record"
-                      width={120}
-                      height={120}
-                      className="w-full h-full object-contain"
-                    />
-                  </motion.div>
-
-                  {/* Lips Kiss Mark Sticker on top of Vinyl */}
-                  <motion.div
-                    whileHover={{ scale: 1.15, rotate: -8 }}
-                    className="absolute -top-3 -right-2 w-12 sm:w-16 z-30 drop-shadow-md cursor-pointer"
-                  >
-                    <Image
-                      src={lipsSvg}
-                      alt="Lips Kiss Sticker"
-                      width={70}
-                      height={50}
-                      className="w-full h-auto object-contain"
-                    />
-                  </motion.div>
+                <div className="relative w-20 sm:w-28 h-20 sm:h-28 rounded-2xl overflow-hidden border-2 border-white/90 shadow-xl bg-white transform rotate-6 hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={cherryImg}
+                    alt="Cherry aesthetics"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               </motion.div>
 
-              {/* STICKER 3: Red Heart Cluster (Left Side) */}
+              {/* STICKER 3: Headphone Photo Badge (Bottom Left) */}
               <motion.div
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[42%] -left-8 sm:-left-12 z-30 w-16 sm:w-20 drop-shadow-lg"
-              >
-                <Image
-                  src={heartsSvg}
-                  alt="Red Hearts"
-                  width={90}
-                  height={100}
-                  className="w-full h-auto object-contain"
-                />
-              </motion.div>
-
-              {/* STICKER 4: Silver Star Stickers (Bottom Left) */}
-              <motion.div
-                animate={{ scale: [1, 1.05, 1], rotate: [-2, 2, -2] }}
+                animate={{ scale: [1, 1.04, 1], rotate: [-4, 2, -4] }}
                 transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-8 -left-6 sm:-left-10 z-30 w-20 sm:w-24 drop-shadow-xl"
+                className="absolute -bottom-8 -left-6 sm:-left-10 z-30 w-20 sm:w-28 drop-shadow-xl"
               >
-                <Image
-                  src={starsSvg}
-                  alt="Silver Stars"
-                  width={110}
-                  height={110}
-                  className="w-full h-auto object-contain"
-                />
+                <div className="relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/90 shadow-xl bg-white -rotate-6 hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={headphoneImg}
+                    alt="Headphones"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               </motion.div>
 
-              {/* STICKER 5: Cassette Tape (Bottom Right) */}
+              {/* STICKER 4: Retro Tape Recorder Photo Card (Bottom Right) */}
               <motion.div
-                initial={{ rotate: 10 }}
-                whileHover={{ scale: 1.08, rotate: 5 }}
-                animate={{ y: [0, 4, 0] }}
+                initial={{ rotate: 8 }}
+                whileHover={{ scale: 1.08, rotate: 3 }}
+                animate={{ y: [0, 5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-10 -right-6 sm:-right-10 z-30 w-36 sm:w-48 drop-shadow-2xl cursor-pointer"
+                className="absolute -bottom-10 -right-6 sm:-right-10 z-30 w-32 sm:w-44 drop-shadow-2xl cursor-pointer"
               >
-                <Image
-                  src={cassetteSvg}
-                  alt="Cassette Tape"
-                  width={200}
-                  height={125}
-                  className="w-full h-auto object-contain"
-                />
+                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border-2 border-white/90 shadow-2xl bg-white">
+                  <Image
+                    src={tapeRecorderImg}
+                    alt="Tape Recorder"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               </motion.div>
 
               {/* MAIN SPOTIFY PLAYLIST CARD */}
@@ -178,11 +142,10 @@ export function AestheticPlaylistShowcase({
                     />
                   ) : (
                     <Image
-                      src={defaultCoverSvg}
-                      alt="Feel Worthy Cover Art"
-                      width={300}
-                      height={300}
-                      className="w-full h-full object-cover"
+                      src={headphoneImg}
+                      alt="Playlist Cover Art"
+                      fill
+                      className="object-cover"
                     />
                   )}
                 </div>
@@ -197,17 +160,11 @@ export function AestheticPlaylistShowcase({
                   </p>
                 </div>
 
-                {/* Spotify Logo Icon at bottom */}
+                {/* Spotify Curated Badge */}
                 <div className="mt-4 flex items-center gap-2 text-zinc-300">
-                  <Image
-                    src={spotifyLogoSvg}
-                    alt="Spotify"
-                    width={22}
-                    height={22}
-                    className="w-5 h-5 opacity-90"
-                  />
+                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-xs font-semibold tracking-wide text-zinc-300 uppercase">
-                    Spotify
+                    Spotify Curated
                   </span>
                 </div>
               </motion.div>
@@ -268,3 +225,4 @@ export function AestheticPlaylistShowcase({
     </div>
   );
 }
+
