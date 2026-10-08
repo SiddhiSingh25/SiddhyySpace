@@ -20,6 +20,8 @@
     "@auth/prisma-adapter": "^2.11.2",
     "@hookform/resolvers": "^5.4.0",
     "@prisma/client": "^6.19.3",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
     "@tanstack/react-query": "^5.101.2",
     "@tiptap/extension-image": "^3.27.4",
     "@tiptap/extension-link": "^3.27.4",
@@ -27,6 +29,7 @@
     "@tiptap/extension-youtube": "^3.27.4",
     "@tiptap/react": "^3.27.4",
     "@tiptap/starter-kit": "^3.27.4",
+    "@types/three": "^0.186.0",
     "axios": "^1.18.1",
     "cloudinary": "^2.10.0",
     "clsx": "^2.1.1",
@@ -41,6 +44,7 @@
     "react-icons": "^5.7.0",
     "slugify": "^1.6.9",
     "tailwind-merge": "^3.6.0",
+    "three": "^0.186.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {

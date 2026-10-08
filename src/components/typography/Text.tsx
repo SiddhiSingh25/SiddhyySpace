@@ -16,7 +16,7 @@ export function Text({
   return (
     <Tag
       className={cn(
-        "text-sm sm:text-base leading-relaxed",
+        "text-base leading-relaxed",
         muted && "text-muted",
         className,
       )}

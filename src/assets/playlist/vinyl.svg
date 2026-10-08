@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" fill="none">
+  <defs>
+    <!-- Vinyl Disc Gradient -->
+    <radialGradient id="vinylBody" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#18181b" />
+      <stop offset="60%" stop-color="#09090b" />
+      <stop offset="85%" stop-color="#18181b" />
+      <stop offset="100%" stop-color="#050505" />
+    </radialGradient>
+
+    <!-- Reflection Sheen -->
+    <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
+      <stop offset="45%" stop-color="#ffffff" stop-opacity="0.0" />
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.0" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.2" />
+    </linearGradient>
+
+    <radialGradient id="redLabel" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#f87171" />
+      <stop offset="50%" stop-color="#dc2626" />
+      <stop offset="100%" stop-color="#991b1b" />
+    </radialGradient>
+
+    <filter id="vinylShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="3" dy="6" stdDeviation="5" flood-color="#000000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <g filter="url(#vinylShadow)">
+    <!-- Outer Vinyl Rim -->
+    <circle cx="80" cy="80" r="76" fill="url(#vinylBody)" stroke="#27272a" stroke-width="2" />
+
+    <!-- Groove Rings -->
+    <circle cx="80" cy="80" r="70" stroke="#27272a" stroke-width="1.2" opacity="0.6" stroke-dasharray="8 3" fill="none" />
+    <circle cx="80" cy="80" r="64" stroke="#3f3f46" stroke-width="1" opacity="0.5" fill="none" />
+    <circle cx="80" cy="80" r="58" stroke="#27272a" stroke-width="1.2" opacity="0.6" stroke-dasharray="12 4" fill="none" />
+    <circle cx="80" cy="80" r="50" stroke="#3f3f46" stroke-width="1" opacity="0.5" fill="none" />
+    <circle cx="80" cy="80" r="42" stroke="#27272a" stroke-width="1.2" opacity="0.6" stroke-dasharray="6 2" fill="none" />
+
+    <!-- Light Sheen Reflection -->
+    <path d="M 80 4 A 76 76 0 0 1 156 80 L 80 80 Z" fill="url(#sheen)" />
+    <path d="M 80 156 A 76 76 0 0 1 4 80 L 80 80 Z" fill="url(#sheen)" />
+
+    <!-- Red Center Label -->
+    <circle cx="80" cy="80" r="28" fill="url(#redLabel)" stroke="#b91c1c" stroke-width="1.5" />
+    <circle cx="80" cy="80" r="24" stroke="#ef4444" stroke-width="0.8" fill="none" opacity="0.6" />
+
+    <!-- Label Text & Ring Details -->
+    <circle cx="80" cy="80" r="14" fill="#7f1d1d" />
+
+    <!-- Spindle Hole -->
+    <circle cx="80" cy="80" r="6" fill="#09090b" stroke="#3f3f46" stroke-width="1.5" />
+    <circle cx="80" cy="80" r="4.5" fill="#f8fafc" opacity="0.3" />
+  </g>
+</svg>

@@ -10,6 +10,7 @@ import heroKeyboard from "@/assets/home/hero-object-2.webp";
 import heroPen from "@/assets/home/hero-object-3.webp";
 import heroCoffee from "@/assets/home/hero-object-coffee.webp";
 import heroCoins from "@/assets/home/hero-object-coins.webp";
+import flowerImg from "@/assets/flower.webp";
 
 const HERO_VIDEO = "/home/video.mp4";
 
@@ -138,18 +139,28 @@ function HeroVideo() {
   }, []);
 
   return (
-    <div className="absolute left-0 top-[60px] w-[270px] -rotate-3 animate-float-slow overflow-hidden rounded-2xl border border-white/70 bg-[#1b1c1b] shadow-[0_20px_40px_rgba(40,55,110,0.22)] ring-1 ring-[#4a62b0]/15">
-      <video
-        ref={ref}
-        src={HERO_VIDEO}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        aria-label={`${siteConfig.name} intro`}
-        className="h-[230px] w-[270px] select-none object-cover"
-      />
+    <div className="absolute left-0 top-[60px] w-[270px] -rotate-3 animate-float-slow rounded-2xl border border-white/70 bg-[#1b1c1b] shadow-[0_20px_40px_rgba(40,55,110,0.22)] ring-1 ring-[#4a62b0]/15">
+      <div className="relative overflow-hidden rounded-2xl">
+        <video
+          ref={ref}
+          src={HERO_VIDEO}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-label={`${siteConfig.name} intro`}
+          className="h-[230px] w-[270px] select-none object-cover"
+        />
+      </div>
+      <div className="pointer-events-none absolute -right-3.5 -top-3.5 z-10">
+        <Image
+          src={flowerImg}
+          alt="Rotating flower"
+          className="h-12 w-12 select-none object-contain animate-spin-slow drop-shadow-[0_4px_10px_rgba(0,0,0,0.25)]"
+          draggable={false}
+        />
+      </div>
     </div>
   );
 }
@@ -321,10 +332,23 @@ export default function Home() {
           animation: float-fast 4s ease-in-out infinite;
         }
 
+        @keyframes spin-slow {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 12s linear infinite;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .animate-float-slow,
           .animate-float-medium,
-          .animate-float-fast {
+          .animate-float-fast,
+          .animate-spin-slow {
             animation: none;
           }
         }

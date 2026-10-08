@@ -20,6 +20,11 @@ import avatar from "@/assets/profile/profile.png"
 import About from "./home/about";
 
 
+import EnvelopeSection from "./home/Envelop";
+
+
+import { AestheticPlaylistShowcase } from "@/components/playlist/AestheticPlaylistShowcase";
+
 export const revalidate = 60;
 
 async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
@@ -43,11 +48,8 @@ export default async function HomePage() {
 
   return (
     <>
-
       <Home />
       <About />
-
-
 
       <Section className="bg-surface/40">
         <Container>
@@ -95,27 +97,23 @@ export default async function HomePage() {
         </Container>
       </Section>
 
-      {playlists[0] ? (
-        <Section className="bg-surface/40">
-          <Container>
-            <Heading as="h2">{playlists[0].title}</Heading>
-            {playlists[0].description ? (
-              <Text muted className="mt-3 max-w-2xl">
-                {playlists[0].description}
+      {/* Retro Aesthetic Playlist Section on Home Route */}
+      <Section className="py-12">
+        <Container>
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <Heading as="h2">Playlists</Heading>
+              <Text muted className="mt-1">
+                Soundtracks for reading and making.
               </Text>
-            ) : null}
-            <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-white">
-              <iframe
-                title={playlists[0].title}
-                src={playlists[0].embedUrl}
-                className="h-40 w-full"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              />
             </div>
-          </Container>
-        </Section>
-      ) : null}
+            <ButtonLink href="/playlists" variant="ghost" size="sm">
+              View all playlists
+            </ButtonLink>
+          </div>
+          <AestheticPlaylistShowcase playlist={playlists[0] || null} />
+        </Container>
+      </Section>
 
       <Section>
         <Container>
@@ -151,6 +149,9 @@ export default async function HomePage() {
           )}
         </Container>
       </Section>
+
+      <EnvelopeSection />
     </>
   );
 }
+
