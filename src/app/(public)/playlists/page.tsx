@@ -41,7 +41,7 @@ export default async function PlaylistsPage() {
               More Playlists
             </Heading>
             <div className="grid gap-6 md:grid-cols-2">
-              {playlists.slice(1).map((playlist) => (
+              {playlists.slice(1).map((playlist: any) => (
                 <article
                   key={playlist.id}
                   className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-shadow hover:shadow-md"

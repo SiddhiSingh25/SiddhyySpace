@@ -21,6 +21,7 @@ import About from "./home/about";
 
 
 import EnvelopeSection from "./home/Envelop";
+import WallOfLove from "./home/wallOfLove";
 
 
 import { AestheticPlaylistShowcase } from "@/components/playlist/AestheticPlaylistShowcase";
@@ -150,8 +151,11 @@ export default async function HomePage() {
         </Container>
       </Section>
 
+      <WallOfLove />
+
       <EnvelopeSection />
     </>
   );
 }
+
 
