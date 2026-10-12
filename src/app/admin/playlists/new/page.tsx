@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Toggle } from "@/components/ui/Toggle";
 import { Button } from "@/components/ui/Button";
+import { ImageUpload } from "@/features/admin/components/ImageUpload";
 import { useToast } from "@/providers/ToastProvider";
+import { formatSpotifyEmbedUrl } from "@/features/spotify/utils";
 
 export default function NewPlaylistPage() {
   const router = useRouter();
@@ -28,11 +30,12 @@ export default function NewPlaylistPage() {
     e.preventDefault();
     setLoading(true);
     try {
+      const formattedEmbedUrl = formatSpotifyEmbedUrl(embedUrl);
       const { data } = await axios.post("/api/admin/playlists", {
         title,
         slug: slug || undefined,
         category: category || null,
-        embedUrl,
+        embedUrl: formattedEmbedUrl,
         image: image || null,
         description: description || null,
         featured,
@@ -78,29 +81,59 @@ export default function NewPlaylistPage() {
           />
         </div>
 
-        <Input
-          label="Spotify Embed URL or Link *"
-          placeholder="https://open.spotify.com/embed/playlist/... or https://open.spotify.com/playlist/..."
-          value={embedUrl}
-          onChange={(e) => setEmbedUrl(e.target.value)}
-          description="You can paste the Spotify iframe URL or share link"
-          required
+        <div className="space-y-3">
+          <Input
+            label="Spotify Embed URL or Link *"
+            placeholder="https://open.spotify.com/playlist/... or https://open.spotify.com/track/..."
+            value={embedUrl}
+            onChange={(e) => setEmbedUrl(e.target.value)}
+            onBlur={() => {
+              if (embedUrl.trim()) {
+                setEmbedUrl(formatSpotifyEmbedUrl(embedUrl));
+              }
+            }}
+            description="Paste any Spotify share link, embed code, or track/playlist URL — it will convert automatically"
+            required
+          />
+          {embedUrl.trim() && (
+            <div className="rounded-xl border border-border bg-slate-50/60 p-3">
+              <div className="flex items-center justify-between pb-2">
+                <span className="text-xs font-medium text-muted">Spotify Player Preview</span>
+                {formatSpotifyEmbedUrl(embedUrl).includes("open.spotify.com/embed/") ? (
+                  <span className="text-[11px] font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    Ready to embed
+                  </span>
+                ) : (
+                  <span className="text-[11px] font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                    Will convert on save
+                  </span>
+                )}
+              </div>
+              <iframe
+                src={formatSpotifyEmbedUrl(embedUrl)}
+                className="h-36 w-full rounded-lg"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+              />
+            </div>
+          )}
+        </div>
+
+        <ImageUpload
+          label="Custom cover artwork (optional)"
+          description="Upload custom artwork directly to Cloudinary or leave blank to use Spotify artwork."
+          value={image}
+          onChange={setImage}
+          folder="siddhyy/playlists"
         />
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input
-            label="Cover image URL (optional)"
-            placeholder="https://..."
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
-          <Input
-            label="Slug (optional)"
-            placeholder="late-night-coding-vibes"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-          />
-        </div>
+        <Input
+          label="Custom slug (optional)"
+          placeholder="late-night-coding-vibes"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+          description="Leave blank to generate automatically from playlist title"
+        />
 
         <Textarea
           label="Description / story"

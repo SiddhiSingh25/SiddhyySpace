@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Toggle } from "@/components/ui/Toggle";
 import { Button } from "@/components/ui/Button";
+import { ImageUpload } from "@/features/admin/components/ImageUpload";
 import { useToast } from "@/providers/ToastProvider";
 import { Trash2 } from "lucide-react";
 
@@ -158,18 +159,20 @@ export default function EditProductPage() {
           />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input
-            label="Product image URL"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
-          <Input
-            label="Affiliate / Store link"
-            value={affiliateUrl}
-            onChange={(e) => setAffiliateUrl(e.target.value)}
-          />
-        </div>
+        <ImageUpload
+          label="Product image"
+          description="Upload product photo directly to Cloudinary or paste an existing link."
+          value={image}
+          onChange={setImage}
+          folder="siddhyy/products"
+        />
+
+        <Input
+          label="Affiliate / Store link"
+          value={affiliateUrl}
+          onChange={(e) => setAffiliateUrl(e.target.value)}
+          description="Direct purchase or referral link for visitors (optional)"
+        />
 
         <Textarea
           label="Description / thoughts"

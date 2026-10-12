@@ -6,3 +6,7 @@ export async function uploadImage(filePathOrDataUri: string, folder = "siddhyy")
     resource_type: "image",
   });
 }
+
+export async function deleteImage(publicId: string) {
+  return cloudinary.uploader.destroy(publicId);
+}

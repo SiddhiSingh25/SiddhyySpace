@@ -5,6 +5,7 @@ import { Heading } from "@/components/typography/Heading";
 import { Text } from "@/components/typography/Text";
 import { getVisiblePlaylists } from "@/features/spotify/services/playlist.service";
 import { AestheticPlaylistShowcase } from "@/components/playlist/AestheticPlaylistShowcase";
+import { formatSpotifyEmbedUrl } from "@/features/spotify/utils";
 
 export const metadata: Metadata = {
   title: "Playlists",
@@ -58,7 +59,7 @@ export default async function PlaylistsPage() {
                   </div>
                   <iframe
                     title={playlist.title}
-                    src={playlist.embedUrl}
+                    src={formatSpotifyEmbedUrl(playlist.embedUrl)}
                     className="h-40 w-full"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                     loading="lazy"

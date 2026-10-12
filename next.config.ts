@@ -15,13 +15,29 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "i.scdn.co",
+      },
+      {
+        protocol: "https",
+        hostname: "mosaic.scdn.co",
+      },
+      {
+        protocol: "https",
+        hostname: "image-cdn-*.spotifycdn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
+      {
+        protocol: "https",
+        hostname: "fastly.picsum.photos",
+      },
     ],
   },
+  allowedDevOrigins: ["192.168.1.14"],
 };
-
-module.exports = {
-  allowedDevOrigins: ['192.168.1.14'],
-}
-
 
 export default nextConfig;

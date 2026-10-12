@@ -10,6 +10,7 @@ import headphoneImg from "@/assets/playlist/headphone.png";
 import tapeRecorderImg from "@/assets/playlist/tapeRecorder.png";
 import spotifyImg from "@/assets/playlist/spotify.png";
 import flowerImg from "@/assets/flower.webp";
+import { formatSpotifyEmbedUrl } from "@/features/spotify/utils";
 
 export interface PlaylistData {
   id?: string;
@@ -34,9 +35,11 @@ export function AestheticPlaylistShowcase({
   const title = playlist?.title || "life in a playlist";
   const displayTitle = playlist?.title || "life in a playlist";
   const authorName = playlist?.authorName || "Playlist by Siddhyyyyyy";
-  const embedUrl =
-    playlist?.embedUrl ||
+  const fallbackEmbedUrl =
     "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator";
+  const embedUrl =
+    (playlist?.embedUrl ? formatSpotifyEmbedUrl(playlist.embedUrl) : "") ||
+    fallbackEmbedUrl;
 
   return (
     <div className={`w-full max-w-5xl mx-auto ${className}`}>
