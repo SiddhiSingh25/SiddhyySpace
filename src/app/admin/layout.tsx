@@ -1,24 +1,9 @@
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
-
-const links = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/blogs", label: "Blogs" },
-  { href: "/admin/books", label: "Books" },
-  { href: "/admin/products", label: "Products" },
-  { href: "/admin/playlists", label: "Playlists" },
-  { href: "/admin/celebrations", label: "Celebrations" },
-  { href: "/admin/categories", label: "Categories" },
-  { href: "/admin/tags", label: "Tags" },
-  { href: "/admin/hero", label: "Hero" },
-  { href: "/admin/about", label: "About" },
-  { href: "/admin/comments", label: "Comments" },
-  { href: "/admin/users", label: "Users" },
-  { href: "/admin/settings", label: "Settings" },
-];
+import { AdminNav, AdminMobileNav } from "@/features/admin/components/AdminNav";
+import { ExternalLink } from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -32,30 +17,59 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-surface/40">
-      <div className="mx-auto flex min-h-screen max-w-7xl">
-        <aside className="hidden w-64 shrink-0 border-r border-border bg-white p-5 md:block">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col md:flex-row">
+        {/* Mobile Header and Bar */}
+        <div className="md:hidden border-b border-border bg-white px-4 py-3 flex items-center justify-between">
+          <div>
+            <Link
+              href="/"
+              className="font-display text-base font-semibold text-foreground no-underline"
+            >
+              {siteConfig.name}
+            </Link>
+            <span className="ml-2 rounded bg-surface px-1.5 py-0.5 text-[10px] font-bold text-muted border border-border">
+              ADMIN
+            </span>
+          </div>
           <Link
             href="/"
-            className="font-display text-lg text-foreground no-underline"
+            className="inline-flex items-center gap-1 text-xs text-muted hover:text-foreground no-underline"
           >
-            {siteConfig.name}
+            Visit site <ExternalLink className="h-3 w-3" />
           </Link>
-          <p className="mt-1 text-xs text-muted">Admin</p>
-          <nav className="mt-8 space-y-1" aria-label="Admin">
-            {links.map((link) => (
+        </div>
+        <AdminMobileNav />
+
+        {/* Desktop Sidebar */}
+        <aside className="hidden w-64 shrink-0 border-r border-border bg-white p-5 md:block">
+          <div className="flex items-center justify-between">
+            <div>
               <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "block rounded-lg px-3 py-2 text-sm text-foreground no-underline hover:bg-primary/40",
-                )}
+                href="/"
+                className="font-display text-lg font-semibold text-foreground no-underline"
               >
-                {link.label}
+                {siteConfig.name}
               </Link>
-            ))}
-          </nav>
+              <p className="text-xs text-muted">Admin Control</p>
+            </div>
+            <Link
+              href="/"
+              title="Visit live site"
+              className="p-1 text-muted hover:text-foreground transition rounded-lg hover:bg-surface no-underline"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="mt-6">
+            <AdminNav />
+          </div>
         </aside>
-        <div className="flex-1 p-4 sm:p-8">{children}</div>
+
+        {/* Content area */}
+        <main className="flex-1 p-4 sm:p-8 max-w-full overflow-hidden">
+          {children}
+        </main>
       </div>
     </div>
   );
