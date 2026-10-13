@@ -18,7 +18,7 @@ import {
   Send,
   MessageCircle,
 } from "lucide-react";
-import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 
 export type WallNote = {
   id: string;
@@ -35,54 +35,6 @@ export type WallNote = {
     image: string | null;
   };
 };
-
-const INITIAL_DEMO_NOTES: WallNote[] = [
-  {
-    id: "demo-1",
-    content: "perfect",
-    userId: "demo-user-1",
-    theme: "emerald",
-    icon: "bolt",
-    likesCount: 14,
-    approved: true,
-    createdAt: new Date("2026-10-09"),
-    user: {
-      id: "demo-user-1",
-      name: "Shristi",
-      image: null,
-    },
-  },
-  {
-    id: "demo-2",
-    content: "Good work man",
-    userId: "demo-user-2",
-    theme: "purple",
-    icon: "sparkles",
-    likesCount: 28,
-    approved: true,
-    createdAt: new Date("2026-10-02"),
-    user: {
-      id: "demo-user-2",
-      name: "Rohan",
-      image: null,
-    },
-  },
-  {
-    id: "demo-3",
-    content: "This cozy space feels like home. Keep creating magic ✨",
-    userId: "demo-user-3",
-    theme: "rose",
-    icon: "heart",
-    likesCount: 39,
-    approved: true,
-    createdAt: new Date("2026-09-28"),
-    user: {
-      id: "demo-user-3",
-      name: "Aanya",
-      image: null,
-    },
-  },
-];
 
 const CARD_THEMES: Record<
   string,
@@ -161,16 +113,40 @@ const ICONS_MAP: Record<string, React.ReactNode> = {
   star: <Star className="w-5 h-5" />,
 };
 
+const LIKED_STORAGE_KEY = "siddhi_wall_liked_notes";
+
 export default function WallOfLoveSection() {
   const { data: session } = useSession();
-  const [notes, setNotes] = useState<WallNote[]>(INITIAL_DEMO_NOTES);
+  const [notes, setNotes] = useState<WallNote[]>([]);
   const [loading, setLoading] = useState(true);
+  const [likedNoteIds, setLikedNoteIds] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formContent, setFormContent] = useState("");
   const [formTheme, setFormTheme] = useState("purple");
   const [formIcon, setFormIcon] = useState("sparkles");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Load liked note IDs from local storage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LIKED_STORAGE_KEY);
+      if (saved) {
+        setLikedNoteIds(JSON.parse(saved));
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, []);
+
+  // Sync liked note IDs to local storage
+  useEffect(() => {
+    try {
+      localStorage.setItem(LIKED_STORAGE_KEY, JSON.stringify(likedNoteIds));
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, [likedNoteIds]);
 
   useEffect(() => {
     fetchNotes();
@@ -182,14 +158,17 @@ export default function WallOfLoveSection() {
       const res = await fetch("/api/wall-of-love");
       if (res.ok) {
         const json = await res.json();
-        if (json.success && json.data && json.data.length > 0) {
+        if (json.success && Array.isArray(json.data)) {
           setNotes(json.data);
         } else {
-          setNotes(INITIAL_DEMO_NOTES);
+          setNotes([]);
         }
+      } else {
+        setNotes([]);
       }
-    } catch {
-      // Keep demo notes if fetch fails
+    } catch (err) {
+      console.error("Failed to load Wall of Love notes:", err);
+      setNotes([]);
     } finally {
       setLoading(false);
     }
@@ -215,40 +194,49 @@ export default function WallOfLoveSection() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: formContent,
+          content: formContent.trim(),
           theme: formTheme,
           icon: formIcon,
         }),
       });
 
       const json = await res.json();
-      if (res.ok && json.success) {
+      if (res.ok && json.success && json.data) {
         setNotes((prev) => [json.data, ...prev]);
         setFormContent("");
         setIsModalOpen(false);
         showToast("Your mark has been left on the wall! ❤️");
       } else {
-        showToast(json.error || "Failed to post note.");
+        showToast(json.message || "Failed to post note.");
       }
     } catch {
-      showToast("Something went wrong.");
+      showToast("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleLike = async (id: string) => {
-    // Optimistic update
-    setNotes((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, likesCount: n.likesCount + 1 } : n))
-    );
+    const isAlreadyLiked = likedNoteIds.includes(id);
 
-    if (id.startsWith("demo-")) return;
-
-    try {
-      await fetch(`/api/wall-of-love/${id}/like`, { method: "POST" });
-    } catch {
-      // ignore silently for likes
+    // Toggle optimistic state
+    if (isAlreadyLiked) {
+      setLikedNoteIds((prev) => prev.filter((item) => item !== id));
+      setNotes((prev) =>
+        prev.map((n) =>
+          n.id === id ? { ...n, likesCount: Math.max(0, n.likesCount - 1) } : n
+        )
+      );
+    } else {
+      setLikedNoteIds((prev) => [...prev, id]);
+      setNotes((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, likesCount: n.likesCount + 1 } : n))
+      );
+      try {
+        await fetch(`/api/wall-of-love/${id}/like`, { method: "POST" });
+      } catch {
+        // Ignore like sync errors silently
+      }
     }
   };
 
@@ -258,18 +246,21 @@ export default function WallOfLoveSection() {
     setNotes((prev) => prev.filter((n) => n.id !== id));
     showToast("Note deleted.");
 
-    if (id.startsWith("demo-")) return;
-
     try {
-      await fetch(`/api/wall-of-love/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/wall-of-love/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        fetchNotes();
+      }
     } catch {
       fetchNotes();
     }
   };
 
   const handleShare = (note: WallNote) => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(`"${note.content}" — ${note.user.name || "A friend"}`);
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(
+        `"${note.content}" — ${note.user?.name || "A friend"}`
+      );
       showToast("Note text copied to clipboard! ✨");
     }
   };
@@ -281,7 +272,7 @@ export default function WallOfLoveSection() {
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(147,51,234,0.18),transparent_60%),radial-gradient(ellipse_at_80%_80%,rgba(16,185,129,0.08),transparent_50%)]"
       />
-      
+
       {/* Fine texture noise lines overlay */}
       <div
         aria-hidden
@@ -289,7 +280,7 @@ export default function WallOfLoveSection() {
       />
 
       <div className="relative mx-auto max-w-6xl">
-        {/* Section Header matching attached design */}
+        {/* Section Header */}
         <div className="text-center mb-16 space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-purple-300/70">
             THE WALL REMEMBERS
@@ -307,7 +298,6 @@ export default function WallOfLoveSection() {
 
         {/* Grid Container */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-          
           {/* CARD 1: JOIN THE WALL (Interactive Action Card) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -331,20 +321,19 @@ export default function WallOfLoveSection() {
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-purple-300/80 font-light">
                 {session?.user ? (
-                  <>Logged in as <span className="font-medium text-purple-200">{session.user.name || session.user.email}</span></>
+                  <>
+                    Logged in as{" "}
+                    <span className="font-medium text-purple-200">
+                      {session.user.name || session.user.email}
+                    </span>
+                  </>
                 ) : (
                   "Sign in to leave your mark"
                 )}
               </p>
 
               <button
-                onClick={() => {
-                  if (!session) {
-                    signIn("google");
-                  } else {
-                    setIsModalOpen(true);
-                  }
-                }}
+                onClick={() => setIsModalOpen(true)}
                 className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-purple-400/40 bg-purple-950/60 px-6 py-3 text-sm font-medium text-purple-100 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:bg-purple-800/60 hover:border-purple-300 active:scale-95"
               >
                 <Pencil className="w-4 h-4 text-pink-300" />
@@ -362,152 +351,250 @@ export default function WallOfLoveSection() {
                 <path
                   d="M0,0 C150,90 350,-40 500,45 C650,130 900,-30 1200,30 L1200,120 L0,120 Z"
                   fill="currentColor"
-                ></path>
+                />
               </svg>
             </div>
 
             {/* Card Footer: Login buttons indicator */}
             <div className="flex items-center justify-center gap-3 pt-3 border-t border-purple-900/40 text-xs text-purple-300/60">
               {!session ? (
-                <>
-                  <button
-                    onClick={() => signIn("github")}
-                    title="Sign in with GitHub"
-                    className="p-1.5 rounded-full hover:bg-purple-900/50 hover:text-white transition"
-                  >
-                    <FaGithub className="w-4 h-4" />
-                  </button>
-                  <span>•</span>
-                  <button
-                    onClick={() => signIn("google")}
-                    title="Sign in with Google"
-                    className="p-1.5 rounded-full hover:bg-purple-900/50 hover:text-white transition"
-                  >
-                    <FaGoogle className="w-4 h-4 text-emerald-400" />
-                  </button>
-                </>
+                <button
+                  onClick={() => signIn("google")}
+                  title="Sign in with Google"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-900/30 hover:bg-purple-900/60 text-purple-200 transition"
+                >
+                  <FaGoogle className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-xs">Sign in with Google</span>
+                </button>
               ) : (
-                <span className="text-xs text-purple-300/80 font-medium">✨ Ready to share your love</span>
+                <span className="text-xs text-purple-300/80 font-medium">
+                  ✨ Ready to share your love
+                </span>
               )}
             </div>
           </motion.div>
 
-          {/* RENDERING TESTIMONIAL NOTE CARDS */}
-          {notes.map((note, index) => {
-            const themeConfig = CARD_THEMES[note.theme] || CARD_THEMES.purple;
-            const iconElement = ICONS_MAP[note.icon] || <Sparkles className="w-5 h-5" />;
-            const isOwnerOrAdmin =
-              session?.user &&
-              (session.user.id === note.userId || session.user.role === "ADMIN");
+          {/* LOADING SPINNER STATE */}
+          {loading ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="relative md:col-span-1 lg:col-span-2 flex flex-col items-center justify-center rounded-3xl border border-purple-500/20 bg-gradient-to-b from-[#1c0c35]/50 via-[#140827]/40 to-[#0e051c]/50 p-8 sm:p-12 min-h-[300px] text-center backdrop-blur-md shadow-[0_0_35px_rgba(168,85,247,0.1)]"
+            >
+              <div className="relative flex items-center justify-center mb-5">
+                <div className="absolute w-20 h-20 rounded-full bg-purple-500/20 blur-xl animate-pulse" />
+                <div className="w-14 h-14 rounded-full border-2 border-purple-500/20 border-t-purple-400 border-r-pink-400 animate-spin" />
+                <Heart className="w-5 h-5 text-pink-400 absolute fill-pink-400/30 animate-pulse" />
+              </div>
+              <h4 className="text-lg font-medium text-purple-100 mb-1">
+                Gathering Echoes of Love...
+              </h4>
+              <p className="text-xs sm:text-sm text-purple-300/60 font-light max-w-sm">
+                Fetching warm notes and heartfelt messages from the wall.
+              </p>
+            </motion.div>
+          ) : notes.length === 0 ? (
+            /* EMPTY STATE: "BE THE FIRST ONE..." */
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative md:col-span-1 lg:col-span-2 flex flex-col justify-between rounded-3xl border border-dashed border-purple-400/30 bg-gradient-to-b from-[#24113f]/60 via-[#180c2e]/50 to-[#0f061e]/60 p-8 sm:p-10 shadow-[0_0_40px_rgba(168,85,247,0.12)] min-h-[300px] overflow-hidden backdrop-blur-md text-center"
+            >
+              {/* Floating ambient glow & sparkles */}
+              <div className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full bg-pink-500/10 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-purple-500/15 blur-3xl" />
 
-            const formattedDate =
-              typeof note.createdAt === "string" || note.createdAt instanceof Date
-                ? new Date(note.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "2-digit",
-                    year: "numeric",
-                  })
-                : "Recently";
+              <div className="absolute top-6 left-6 text-purple-300/30">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div className="absolute top-6 right-6 text-pink-400/30">
+                <Heart className="w-5 h-5 fill-pink-400/20" />
+              </div>
 
-            const userInitial = note.user?.name ? note.user.name.charAt(0).toUpperCase() : "A";
-
-            return (
-              <motion.div
-                key={note.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`relative flex flex-col justify-between rounded-3xl border ${themeConfig.border} ${themeConfig.bg} ${themeConfig.glow} p-7 transition-all duration-300 hover:scale-[1.02] min-h-[300px]`}
-              >
-                {/* Top Left Icon Badge */}
-                <div className="flex items-center justify-between">
-                  <div className={`${themeConfig.accent} opacity-90 transition-transform duration-300 hover:rotate-12`}>
-                    {iconElement}
+              <div className="my-auto flex flex-col items-center justify-center py-6">
+                <div className="relative mb-4 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-purple-500/15 border border-purple-400/30 flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.25)]">
+                    <Sparkles className="w-7 h-7 text-pink-300 animate-pulse" />
                   </div>
-                  {isOwnerOrAdmin && (
-                    <button
-                      onClick={() => handleDelete(note.id)}
-                      title="Delete note"
-                      className="text-gray-500 hover:text-rose-400 p-1 rounded-full transition"
+                </div>
+
+                <h3 className="great-vibes-regular text-4xl sm:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-200 to-indigo-200">
+                  Be the first one...
+                </h3>
+                <p className="mt-2 text-sm sm:text-base text-purple-200/80 max-w-md font-light leading-relaxed">
+                  No messages on the wall yet. Be the first one to leave your mark, share a kind thought, or spread some love! ✨
+                </p>
+
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-pink-400/40 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 px-7 py-3 text-sm font-semibold text-white shadow-[0_0_25px_rgba(236,72,153,0.3)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_35px_rgba(236,72,153,0.5)] active:scale-95"
+                >
+                  <Pencil className="w-4 h-4 text-pink-200" />
+                  <span>Be the first to write a note ✨</span>
+                </button>
+              </div>
+
+              {/* Decorative wave at bottom */}
+              <div className="w-full overflow-hidden leading-none pt-2 opacity-40">
+                <svg
+                  viewBox="0 0 1200 120"
+                  preserveAspectRatio="none"
+                  className="relative block w-full h-4 text-[#120724]"
+                >
+                  <path
+                    d="M0,0 C150,90 350,-40 500,45 C650,130 900,-30 1200,30 L1200,120 L0,120 Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+
+              <div className="flex items-center justify-center gap-2 pt-2 border-t border-purple-900/30 text-xs text-purple-300/50">
+                <span>✨ This blank canvas is waiting for your kind words</span>
+              </div>
+            </motion.div>
+          ) : (
+            /* RENDERING TESTIMONIAL NOTE CARDS */
+            notes.map((note, index) => {
+              const themeConfig = CARD_THEMES[note.theme] || CARD_THEMES.purple;
+              const iconElement = ICONS_MAP[note.icon] || (
+                <Sparkles className="w-5 h-5" />
+              );
+              const isOwnerOrAdmin =
+                session?.user &&
+                (session.user.id === note.userId || session.user.role === "ADMIN");
+
+              const formattedDate =
+                typeof note.createdAt === "string" ||
+                note.createdAt instanceof Date
+                  ? new Date(note.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "2-digit",
+                      year: "numeric",
+                    })
+                  : "Recently";
+
+              const userInitial = note.user?.name
+                ? note.user.name.charAt(0).toUpperCase()
+                : "A";
+
+              const isLiked = likedNoteIds.includes(note.id);
+
+              return (
+                <motion.div
+                  key={note.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.08 }}
+                  className={`relative flex flex-col justify-between rounded-3xl border ${themeConfig.border} ${themeConfig.bg} ${themeConfig.glow} p-7 transition-all duration-300 hover:scale-[1.02] min-h-[300px]`}
+                >
+                  {/* Top Left Icon Badge */}
+                  <div className="flex items-center justify-between">
+                    <div
+                      className={`${themeConfig.accent} opacity-90 transition-transform duration-300 hover:rotate-12`}
                     >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-
-                {/* Card Content Text */}
-                <div className="my-auto py-6 text-center">
-                  <p className="text-xl sm:text-2xl font-semibold tracking-wide text-white/95 leading-relaxed font-sans">
-                    {note.content}
-                  </p>
-                </div>
-
-                {/* Bottom Wavy Line SVG matching design screenshot */}
-                <div className="w-full overflow-hidden leading-none pt-2">
-                  <svg
-                    viewBox="0 0 1200 120"
-                    preserveAspectRatio="none"
-                    className="relative block w-full h-5 text-black/30"
-                  >
-                    <path
-                      d="M0,0 C150,90 350,-40 500,45 C650,130 900,-30 1200,30 L1200,120 L0,120 Z"
-                      fill={themeConfig.waveFill}
-                    ></path>
-                  </svg>
-                </div>
-
-                {/* Card Footer: User details & Like/Share actions */}
-                <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
-                  <div className="flex items-center gap-3">
-                    {note.user?.image ? (
-                      <Image
-                        src={note.user.image}
-                        alt={note.user.name || "User avatar"}
-                        width={32}
-                        height={32}
-                        className="rounded-full ring-2 ring-white/20 object-cover"
-                      />
-                    ) : (
-                      <div
-                        className={`w-8 h-8 rounded-full ${themeConfig.badgeBg} text-white flex items-center justify-center font-bold text-xs shadow-inner ring-2 ring-white/20`}
+                      {iconElement}
+                    </div>
+                    {isOwnerOrAdmin && (
+                      <button
+                        onClick={() => handleDelete(note.id)}
+                        title="Delete note"
+                        className="text-gray-500 hover:text-rose-400 p-1 rounded-full transition"
                       >
-                        {userInitial}
-                      </div>
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     )}
-                    <div>
-                      <h4 className="font-semibold text-white/90 leading-tight">
-                        {note.user?.name || "Anonymous Friend"}
-                      </h4>
-                      <p className="text-[11px] text-gray-400 font-light">{formattedDate}</p>
+                  </div>
+
+                  {/* Card Content Text */}
+                  <div className="my-auto py-6 text-center">
+                    <p className="text-xl sm:text-2xl font-semibold tracking-wide text-white/95 leading-relaxed font-sans">
+                      {note.content}
+                    </p>
+                  </div>
+
+                  {/* Bottom Wavy Line SVG */}
+                  <div className="w-full overflow-hidden leading-none pt-2">
+                    <svg
+                      viewBox="0 0 1200 120"
+                      preserveAspectRatio="none"
+                      className="relative block w-full h-5 text-black/30"
+                    >
+                      <path
+                        d="M0,0 C150,90 350,-40 500,45 C650,130 900,-30 1200,30 L1200,120 L0,120 Z"
+                        fill={themeConfig.waveFill}
+                      />
+                    </svg>
+                  </div>
+
+                  {/* Card Footer: User details & Like/Share actions */}
+                  <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
+                    <div className="flex items-center gap-3">
+                      {note.user?.image ? (
+                        <img
+                          src={note.user.image}
+                          alt={note.user?.name || "User avatar"}
+                          className="w-8 h-8 rounded-full ring-2 ring-white/20 object-cover"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLElement).style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <div
+                          className={`w-8 h-8 rounded-full ${themeConfig.badgeBg} text-white flex items-center justify-center font-bold text-xs shadow-inner ring-2 ring-white/20`}
+                        >
+                          {userInitial}
+                        </div>
+                      )}
+                      <div>
+                        <h4 className="font-semibold text-white/90 leading-tight">
+                          {note.user?.name || "Anonymous Friend"}
+                        </h4>
+                        <p className="text-[11px] text-gray-400 font-light">
+                          {formattedDate}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleLike(note.id)}
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full transition active:scale-125 ${
+                          isLiked
+                            ? "bg-pink-500/20 text-pink-300 ring-1 ring-pink-500/30"
+                            : "bg-white/5 hover:bg-white/15 text-gray-300 hover:text-pink-400"
+                        }`}
+                        title={isLiked ? "Liked!" : "Like note"}
+                      >
+                        <Heart
+                          className={`w-3.5 h-3.5 transition-colors ${
+                            isLiked
+                              ? "fill-pink-500 text-pink-400"
+                              : "fill-pink-500/20 text-pink-400"
+                          }`}
+                        />
+                        <span className="text-xs font-medium">
+                          {note.likesCount}
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => handleShare(note)}
+                        className="p-1.5 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition"
+                        title="Share note"
+                      >
+                        <Share2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleLike(note.id)}
-                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/15 text-gray-300 hover:text-pink-400 transition active:scale-125"
-                      title="Like note"
-                    >
-                      <Heart className="w-3.5 h-3.5 fill-pink-500/20 text-pink-400" />
-                      <span className="text-xs font-medium">{note.likesCount}</span>
-                    </button>
-                    <button
-                      onClick={() => handleShare(note)}
-                      className="p-1.5 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition"
-                      title="Share note"
-                    >
-                      <Share2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+                </motion.div>
+              );
+            })
+          )}
         </div>
       </div>
 
-      {/* MODAL TO WRITE A NOTE */}
+      {/* MODAL TO WRITE A NOTE / AUTHENTICATE */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
@@ -536,90 +623,122 @@ export default function WallOfLoveSection() {
                 </div>
               </div>
 
-              <form onSubmit={handleCreateNote} className="space-y-5">
-                <div>
-                  <label className="block text-xs font-medium text-purple-200 mb-2">
-                    Your Message
-                  </label>
-                  <textarea
-                    rows={4}
-                    maxLength={300}
-                    value={formContent}
-                    onChange={(e) => setFormContent(e.target.value)}
-                    placeholder="Write something heartwarming..."
-                    className="w-full rounded-2xl border border-purple-500/30 bg-purple-950/40 p-4 text-sm text-white placeholder-purple-300/40 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 resize-none"
-                    required
-                  />
-                  <div className="flex justify-end mt-1">
-                    <span className="text-[11px] text-gray-400">
-                      {formContent.length}/300
-                    </span>
+              {!session ? (
+                /* Prompt to sign in if not logged in */
+                <div className="text-center py-6 space-y-4">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300 shadow-[0_0_25px_rgba(168,85,247,0.25)]">
+                    <Heart className="w-7 h-7 text-pink-400 fill-pink-400/20 animate-pulse" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white">
+                      Sign in to leave your mark
+                    </h4>
+                    <p className="text-xs sm:text-sm text-purple-300/70 max-w-xs mx-auto mt-1 font-light">
+                      Sign in with Google to post your message on the wall.
+                    </p>
+                  </div>
+                  <div className="pt-2 flex flex-col gap-3 max-w-xs mx-auto">
+                    <button
+                      type="button"
+                      onClick={() => signIn("google")}
+                      className="w-full flex items-center justify-center gap-3 rounded-2xl bg-white hover:bg-gray-100 text-gray-900 font-medium py-3 px-4 shadow-lg transition hover:scale-[1.02] active:scale-98 text-sm"
+                    >
+                      <FaGoogle className="w-4 h-4 text-emerald-600" />
+                      <span>Continue with Google</span>
+                    </button>
                   </div>
                 </div>
-
-                {/* Theme Selector */}
-                <div>
-                  <label className="block text-xs font-medium text-purple-200 mb-2">
-                    Choose Card Theme
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {Object.entries(CARD_THEMES).map(([key, cfg]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setFormTheme(key)}
-                        className={`flex items-center gap-2 rounded-xl p-2.5 text-xs font-medium transition border ${
-                          formTheme === key
-                            ? "border-white bg-white/20 ring-2 ring-purple-400"
-                            : "border-white/10 bg-white/5 hover:bg-white/10"
-                        }`}
-                      >
-                        <span className={`w-3.5 h-3.5 rounded-full ${cfg.badgeBg}`} />
-                        <span className="truncate text-gray-200">{cfg.label}</span>
-                      </button>
-                    ))}
+              ) : (
+                /* Message form for authenticated users */
+                <form onSubmit={handleCreateNote} className="space-y-5">
+                  <div>
+                    <label className="block text-xs font-medium text-purple-200 mb-2">
+                      Your Message
+                    </label>
+                    <textarea
+                      rows={4}
+                      maxLength={300}
+                      value={formContent}
+                      onChange={(e) => setFormContent(e.target.value)}
+                      placeholder="Write something heartwarming..."
+                      className="w-full rounded-2xl border border-purple-500/30 bg-purple-950/40 p-4 text-sm text-white placeholder-purple-300/40 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 resize-none"
+                      required
+                    />
+                    <div className="flex justify-end mt-1">
+                      <span className="text-[11px] text-gray-400">
+                        {formContent.length}/300
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Icon Selector */}
-                <div>
-                  <label className="block text-xs font-medium text-purple-200 mb-2">
-                    Choose Badge Icon
-                  </label>
-                  <div className="flex items-center gap-2">
-                    {Object.entries(ICONS_MAP).map(([key, iconNode]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setFormIcon(key)}
-                        className={`p-3 rounded-xl border transition ${
-                          formIcon === key
-                            ? "border-purple-400 bg-purple-600/30 text-purple-200 ring-2 ring-purple-400/50"
-                            : "border-white/10 bg-white/5 text-gray-400 hover:text-white"
-                        }`}
-                      >
-                        {iconNode}
-                      </button>
-                    ))}
+                  {/* Theme Selector */}
+                  <div>
+                    <label className="block text-xs font-medium text-purple-200 mb-2">
+                      Choose Card Theme
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {Object.entries(CARD_THEMES).map(([key, cfg]) => (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => setFormTheme(key)}
+                          className={`flex items-center gap-2 rounded-xl p-2.5 text-xs font-medium transition border ${
+                            formTheme === key
+                              ? "border-white bg-white/20 ring-2 ring-purple-400"
+                              : "border-white/10 bg-white/5 hover:bg-white/10"
+                          }`}
+                        >
+                          <span
+                            className={`w-3.5 h-3.5 rounded-full ${cfg.badgeBg}`}
+                          />
+                          <span className="truncate text-gray-200">
+                            {cfg.label}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* Submit button */}
-                <button
-                  type="submit"
-                  disabled={submitting || !formContent.trim()}
-                  className="w-full mt-4 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 active:scale-98"
-                >
-                  {submitting ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      <span>Post to Wall of Love</span>
-                    </>
-                  )}
-                </button>
-              </form>
+                  {/* Icon Selector */}
+                  <div>
+                    <label className="block text-xs font-medium text-purple-200 mb-2">
+                      Choose Badge Icon
+                    </label>
+                    <div className="flex items-center gap-2">
+                      {Object.entries(ICONS_MAP).map(([key, iconNode]) => (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => setFormIcon(key)}
+                          className={`p-3 rounded-xl border transition ${
+                            formIcon === key
+                              ? "border-purple-400 bg-purple-600/30 text-purple-200 ring-2 ring-purple-400/50"
+                              : "border-white/10 bg-white/5 text-gray-400 hover:text-white"
+                          }`}
+                        >
+                          {iconNode}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Submit button */}
+                  <button
+                    type="submit"
+                    disabled={submitting || !formContent.trim()}
+                    className="w-full mt-4 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 active:scale-98"
+                  >
+                    {submitting ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Post to Wall of Love</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
             </motion.div>
           </div>
         )}

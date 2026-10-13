@@ -15,13 +15,13 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
     ],
   },
+  allowedDevOrigins: ["192.168.1.14"],
 };
-
-module.exports = {
-  allowedDevOrigins: ['192.168.1.14'],
-}
-
 
 export default nextConfig;
