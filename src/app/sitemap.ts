@@ -3,7 +3,8 @@ import { siteConfig } from "@/config/site";
 import { db } from "@/lib/db";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = siteConfig.url;
+  const base = "https://siddhyy-space-web.vercel.app";
+  // const base = siteConfig.url;
 
   const staticRoutes: MetadataRoute.Sitemap = [
     "",
