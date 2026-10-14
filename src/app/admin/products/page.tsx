@@ -121,7 +121,7 @@ export default async function AdminProductsPage({
                       )}
                     </td>
                     <td className="px-5 py-4 font-medium text-foreground">
-                      {product.price !== null ? `$${product.price.toFixed(2)}` : "—"}
+                      {product.price !== null ? `₹${product.price.toFixed(2)}` : "—"}
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex flex-wrap gap-1.5">

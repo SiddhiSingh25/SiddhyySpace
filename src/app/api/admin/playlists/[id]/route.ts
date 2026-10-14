@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth-guards";
 import { errorResponse, successResponse } from "@/lib/api-response";
 import { slugify } from "@/utils/content";
+import { formatSpotifyEmbedUrl } from "@/features/spotify/utils";
 
 const playlistSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -61,7 +62,7 @@ export async function PUT(request: Request, { params }: Params) {
         title: body.title.trim(),
         slug,
         description: body.description?.trim() || null,
-        embedUrl: body.embedUrl.trim(),
+        embedUrl: formatSpotifyEmbedUrl(body.embedUrl),
         image: body.image?.trim() || null,
         category: body.category?.trim() || null,
         featured: body.featured,

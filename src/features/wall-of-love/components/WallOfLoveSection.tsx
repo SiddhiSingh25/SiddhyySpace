@@ -36,6 +36,7 @@ export type WallNote = {
   };
 };
 
+// Light-themed card palettes aligned with the project's periwinkle + neutral design system
 const CARD_THEMES: Record<
   string,
   {
@@ -49,58 +50,58 @@ const CARD_THEMES: Record<
   }
 > = {
   purple: {
-    bg: "bg-gradient-to-b from-[#2a134d] via-[#1c0c35] to-[#120724]",
-    border: "border-purple-500/30 hover:border-purple-400/50",
-    accent: "text-purple-300",
-    waveFill: "#120724",
-    glow: "shadow-[0_0_35px_rgba(168,85,247,0.15)]",
-    badgeBg: "bg-purple-600",
-    label: "Purple Dusk",
+    bg: "bg-gradient-to-b from-[#eef1fb] via-[#f3f5fd] to-white",
+    border: "border-[#b0bde8]/50 hover:border-[#4a62b0]/40",
+    accent: "text-[#4a62b0]",
+    waveFill: "#f3f5fd",
+    glow: "shadow-[0_4px_24px_rgba(74,98,176,0.10)]",
+    badgeBg: "bg-[#4a62b0]",
+    label: "Periwinkle",
   },
   emerald: {
-    bg: "bg-gradient-to-b from-[#0d3326] via-[#09241b] to-[#04120d]",
-    border: "border-emerald-500/30 hover:border-emerald-400/50",
-    accent: "text-emerald-400",
-    waveFill: "#04120d",
-    glow: "shadow-[0_0_35px_rgba(16,185,129,0.15)]",
-    badgeBg: "bg-emerald-600",
-    label: "Emerald Moss",
+    bg: "bg-gradient-to-b from-[#eaf6f0] via-[#f2fbf6] to-white",
+    border: "border-emerald-200/60 hover:border-emerald-400/50",
+    accent: "text-emerald-600",
+    waveFill: "#f2fbf6",
+    glow: "shadow-[0_4px_24px_rgba(16,185,129,0.10)]",
+    badgeBg: "bg-emerald-500",
+    label: "Sage Green",
   },
   violet: {
-    bg: "bg-gradient-to-b from-[#231745] via-[#180f33] to-[#0e081f]",
-    border: "border-indigo-500/30 hover:border-indigo-400/50",
-    accent: "text-indigo-300",
-    waveFill: "#0e081f",
-    glow: "shadow-[0_0_35px_rgba(99,102,241,0.15)]",
-    badgeBg: "bg-indigo-600",
-    label: "Deep Violet",
+    bg: "bg-gradient-to-b from-[#f0eeff] via-[#f6f4ff] to-white",
+    border: "border-violet-200/60 hover:border-violet-400/50",
+    accent: "text-violet-600",
+    waveFill: "#f6f4ff",
+    glow: "shadow-[0_4px_24px_rgba(124,58,237,0.10)]",
+    badgeBg: "bg-violet-500",
+    label: "Soft Violet",
   },
   rose: {
-    bg: "bg-gradient-to-b from-[#3b1227] via-[#290c1b] to-[#14050d]",
-    border: "border-pink-500/30 hover:border-pink-400/50",
-    accent: "text-pink-300",
-    waveFill: "#14050d",
-    glow: "shadow-[0_0_35px_rgba(236,72,153,0.15)]",
-    badgeBg: "bg-pink-600",
-    label: "Velvet Rose",
+    bg: "bg-gradient-to-b from-[#fef1f4] via-[#fff5f7] to-white",
+    border: "border-rose-200/60 hover:border-rose-400/50",
+    accent: "text-rose-500",
+    waveFill: "#fff5f7",
+    glow: "shadow-[0_4px_24px_rgba(244,63,94,0.10)]",
+    badgeBg: "bg-rose-400",
+    label: "Blush Rose",
   },
   amber: {
-    bg: "bg-gradient-to-b from-[#38200b] via-[#281607] to-[#140b03]",
-    border: "border-amber-500/30 hover:border-amber-400/50",
-    accent: "text-amber-400",
-    waveFill: "#140b03",
-    glow: "shadow-[0_0_35px_rgba(245,158,11,0.15)]",
-    badgeBg: "bg-amber-600",
+    bg: "bg-gradient-to-b from-[#fef8ec] via-[#fffbf2] to-white",
+    border: "border-amber-200/60 hover:border-amber-400/50",
+    accent: "text-amber-600",
+    waveFill: "#fffbf2",
+    glow: "shadow-[0_4px_24px_rgba(245,158,11,0.10)]",
+    badgeBg: "bg-amber-500",
     label: "Warm Amber",
   },
   cyan: {
-    bg: "bg-gradient-to-b from-[#0b2d38] via-[#071f26] to-[#030d12]",
-    border: "border-cyan-500/30 hover:border-cyan-400/50",
-    accent: "text-cyan-300",
-    waveFill: "#030d12",
-    glow: "shadow-[0_0_35px_rgba(6,182,212,0.15)]",
-    badgeBg: "bg-cyan-600",
-    label: "Midnight Cyan",
+    bg: "bg-gradient-to-b from-[#ecf9fc] via-[#f3fbfd] to-white",
+    border: "border-cyan-200/60 hover:border-cyan-400/50",
+    accent: "text-cyan-600",
+    waveFill: "#f3fbfd",
+    glow: "shadow-[0_4px_24px_rgba(6,182,212,0.10)]",
+    badgeBg: "bg-cyan-500",
+    label: "Morning Cyan",
   },
 };
 
@@ -266,64 +267,65 @@ export default function WallOfLoveSection() {
   };
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#0c0a12] text-white py-20 px-4 sm:px-6 lg:px-8">
-      {/* Subtle crumpled paper texture & background glowing ambient radial light */}
+    <section className="relative w-full overflow-hidden bg-[var(--color-surface)] text-[var(--color-text)] py-20 px-4 sm:px-6 lg:px-8">
+      {/* Subtle soft radial ambient washes */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(147,51,234,0.18),transparent_60%),radial-gradient(ellipse_at_80%_80%,rgba(16,185,129,0.08),transparent_50%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(211,222,250,0.55),transparent_60%),radial-gradient(ellipse_at_80%_90%,rgba(74,98,176,0.07),transparent_50%)]"
       />
 
-      {/* Fine texture noise lines overlay */}
+      {/* Fine dot-grid texture overlay */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"
+        className="pointer-events-none absolute inset-0 opacity-[0.04] bg-[radial-gradient(#4a62b0_1px,transparent_1px)] [background-size:20px_20px]"
       />
 
       <div className="relative mx-auto max-w-6xl">
-        {/* Section Header */}
+        {/* ─── Section Header ─── */}
         <div className="text-center mb-16 space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-purple-300/70">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#4a62b0]/60">
             THE WALL REMEMBERS
           </p>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif tracking-tight text-white">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif tracking-tight text-[var(--color-text)]">
             Words That Echo{" "}
-            <span className="great-vibes-regular text-4xl sm:text-6xl lg:text-7xl font-normal text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-300 ml-1">
+            <span className="great-vibes-regular text-4xl sm:text-6xl lg:text-7xl font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#4a62b0] via-rose-400 to-violet-400 ml-1">
               Always
             </span>
           </h2>
-          <p className="text-sm sm:text-base text-gray-400 max-w-xl mx-auto pt-1 font-light">
+          <p className="text-sm sm:text-base text-[var(--color-muted)] max-w-xl mx-auto pt-1 font-light">
             A cozy corner where kind words, notes, and quiet reflections are preserved forever.
           </p>
         </div>
 
-        {/* Grid Container */}
+        {/* ─── Grid Container ─── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+
           {/* CARD 1: JOIN THE WALL (Interactive Action Card) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="relative flex flex-col justify-between rounded-3xl border border-purple-500/30 bg-gradient-to-b from-[#2a134d] via-[#1c0c35] to-[#120724] p-7 shadow-[0_0_35px_rgba(168,85,247,0.15)] transition-all duration-300 hover:border-purple-400/50 hover:shadow-[0_0_45px_rgba(168,85,247,0.25)] min-h-[300px]"
+            className="relative flex flex-col justify-between rounded-3xl border border-[#d3defa]/70 hover:border-[#4a62b0]/40 bg-gradient-to-b from-[#eef1fb] via-[#f3f5fd] to-white p-7 shadow-[0_4px_24px_rgba(74,98,176,0.10)] hover:shadow-[0_8px_36px_rgba(74,98,176,0.18)] transition-all duration-300 min-h-[300px]"
           >
             {/* Decorative sparkles */}
-            <div className="absolute top-6 right-6 text-purple-300/40 animate-pulse">
+            <div className="absolute top-6 right-6 text-[#4a62b0]/30 animate-pulse">
               <Sparkles className="w-6 h-6" />
             </div>
-            <div className="absolute bottom-16 left-6 text-purple-300/20">
+            <div className="absolute bottom-16 left-6 text-[#4a62b0]/20">
               <Pencil className="w-5 h-5 -rotate-12" />
             </div>
 
             {/* Card Main Body */}
             <div className="flex flex-col items-center justify-center flex-1 text-center py-6">
-              <h3 className="great-vibes-regular text-3xl sm:text-4xl text-purple-200">
+              <h3 className="great-vibes-regular text-3xl sm:text-4xl text-[#4a62b0]">
                 &ldquo;Join the wall...&rdquo;
               </h3>
-              <p className="mt-2 text-xs sm:text-sm text-purple-300/80 font-light">
+              <p className="mt-2 text-xs sm:text-sm text-[var(--color-muted)] font-light">
                 {session?.user ? (
                   <>
                     Logged in as{" "}
-                    <span className="font-medium text-purple-200">
+                    <span className="font-medium text-[var(--color-text)]">
                       {session.user.name || session.user.email}
                     </span>
                   </>
@@ -334,9 +336,9 @@ export default function WallOfLoveSection() {
 
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-purple-400/40 bg-purple-950/60 px-6 py-3 text-sm font-medium text-purple-100 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:bg-purple-800/60 hover:border-purple-300 active:scale-95"
+                className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-[#4a62b0]/30 bg-[#eef1fb] hover:bg-[#d3defa]/60 px-6 py-3 text-sm font-medium text-[#4a62b0] shadow-sm transition-all duration-300 hover:scale-105 hover:border-[#4a62b0]/60 active:scale-95"
               >
-                <Pencil className="w-4 h-4 text-pink-300" />
+                <Pencil className="w-4 h-4 text-rose-400" />
                 <span>Write a message...</span>
               </button>
             </div>
@@ -346,7 +348,7 @@ export default function WallOfLoveSection() {
               <svg
                 viewBox="0 0 1200 120"
                 preserveAspectRatio="none"
-                className="relative block w-full h-5 text-[#120724]"
+                className="relative block w-full h-5 text-[#f3f5fd]"
               >
                 <path
                   d="M0,0 C150,90 350,-40 500,45 C650,130 900,-30 1200,30 L1200,120 L0,120 Z"
@@ -356,18 +358,18 @@ export default function WallOfLoveSection() {
             </div>
 
             {/* Card Footer: Login buttons indicator */}
-            <div className="flex items-center justify-center gap-3 pt-3 border-t border-purple-900/40 text-xs text-purple-300/60">
+            <div className="flex items-center justify-center gap-3 pt-3 border-t border-[#e4e8f2] text-xs text-[var(--color-muted)]">
               {!session ? (
                 <button
                   onClick={() => signIn("google")}
                   title="Sign in with Google"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-900/30 hover:bg-purple-900/60 text-purple-200 transition"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#d3defa]/40 hover:bg-[#d3defa]/70 text-[#4a62b0] transition"
                 >
-                  <FaGoogle className="w-3.5 h-3.5 text-emerald-400" />
+                  <FaGoogle className="w-3.5 h-3.5 text-emerald-500" />
                   <span className="text-xs">Sign in with Google</span>
                 </button>
               ) : (
-                <span className="text-xs text-purple-300/80 font-medium">
+                <span className="text-xs text-[#4a62b0]/80 font-medium">
                   ✨ Ready to share your love
                 </span>
               )}
@@ -379,17 +381,17 @@ export default function WallOfLoveSection() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="relative md:col-span-1 lg:col-span-2 flex flex-col items-center justify-center rounded-3xl border border-purple-500/20 bg-gradient-to-b from-[#1c0c35]/50 via-[#140827]/40 to-[#0e051c]/50 p-8 sm:p-12 min-h-[300px] text-center backdrop-blur-md shadow-[0_0_35px_rgba(168,85,247,0.1)]"
+              className="relative md:col-span-1 lg:col-span-2 flex flex-col items-center justify-center rounded-3xl border border-[#d3defa]/60 bg-white/80 p-8 sm:p-12 min-h-[300px] text-center backdrop-blur-md shadow-[0_4px_20px_rgba(74,98,176,0.08)]"
             >
               <div className="relative flex items-center justify-center mb-5">
-                <div className="absolute w-20 h-20 rounded-full bg-purple-500/20 blur-xl animate-pulse" />
-                <div className="w-14 h-14 rounded-full border-2 border-purple-500/20 border-t-purple-400 border-r-pink-400 animate-spin" />
-                <Heart className="w-5 h-5 text-pink-400 absolute fill-pink-400/30 animate-pulse" />
+                <div className="absolute w-20 h-20 rounded-full bg-[#d3defa]/40 blur-xl animate-pulse" />
+                <div className="w-14 h-14 rounded-full border-2 border-[#d3defa] border-t-[#4a62b0] border-r-rose-300 animate-spin" />
+                <Heart className="w-5 h-5 text-rose-400 absolute fill-rose-300/40 animate-pulse" />
               </div>
-              <h4 className="text-lg font-medium text-purple-100 mb-1">
+              <h4 className="text-lg font-medium text-[var(--color-text)] mb-1">
                 Gathering Echoes of Love...
               </h4>
-              <p className="text-xs sm:text-sm text-purple-300/60 font-light max-w-sm">
+              <p className="text-xs sm:text-sm text-[var(--color-muted)] font-light max-w-sm">
                 Fetching warm notes and heartfelt messages from the wall.
               </p>
             </motion.div>
@@ -399,48 +401,48 @@ export default function WallOfLoveSection() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="relative md:col-span-1 lg:col-span-2 flex flex-col justify-between rounded-3xl border border-dashed border-purple-400/30 bg-gradient-to-b from-[#24113f]/60 via-[#180c2e]/50 to-[#0f061e]/60 p-8 sm:p-10 shadow-[0_0_40px_rgba(168,85,247,0.12)] min-h-[300px] overflow-hidden backdrop-blur-md text-center"
+              className="relative md:col-span-1 lg:col-span-2 flex flex-col justify-between rounded-3xl border border-dashed border-[#4a62b0]/25 bg-white/70 p-8 sm:p-10 shadow-[0_4px_28px_rgba(74,98,176,0.08)] min-h-[300px] overflow-hidden backdrop-blur-md text-center"
             >
-              {/* Floating ambient glow & sparkles */}
-              <div className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full bg-pink-500/10 blur-3xl" />
-              <div className="pointer-events-none absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-purple-500/15 blur-3xl" />
+              {/* Ambient glows */}
+              <div className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full bg-rose-100/60 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-[#d3defa]/50 blur-3xl" />
 
-              <div className="absolute top-6 left-6 text-purple-300/30">
+              <div className="absolute top-6 left-6 text-[#4a62b0]/25">
                 <Sparkles className="w-5 h-5" />
               </div>
-              <div className="absolute top-6 right-6 text-pink-400/30">
-                <Heart className="w-5 h-5 fill-pink-400/20" />
+              <div className="absolute top-6 right-6 text-rose-300/40">
+                <Heart className="w-5 h-5 fill-rose-200/40" />
               </div>
 
               <div className="my-auto flex flex-col items-center justify-center py-6">
                 <div className="relative mb-4 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-purple-500/15 border border-purple-400/30 flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.25)]">
-                    <Sparkles className="w-7 h-7 text-pink-300 animate-pulse" />
+                  <div className="w-16 h-16 rounded-full bg-[#eef1fb] border border-[#d3defa]/60 flex items-center justify-center shadow-[0_4px_20px_rgba(74,98,176,0.12)]">
+                    <Sparkles className="w-7 h-7 text-[#4a62b0] animate-pulse" />
                   </div>
                 </div>
 
-                <h3 className="great-vibes-regular text-4xl sm:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-200 to-indigo-200">
+                <h3 className="great-vibes-regular text-4xl sm:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-[#4a62b0] via-violet-500 to-rose-400">
                   Be the first one...
                 </h3>
-                <p className="mt-2 text-sm sm:text-base text-purple-200/80 max-w-md font-light leading-relaxed">
+                <p className="mt-2 text-sm sm:text-base text-[var(--color-muted)] max-w-md font-light leading-relaxed">
                   No messages on the wall yet. Be the first one to leave your mark, share a kind thought, or spread some love! ✨
                 </p>
 
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-pink-400/40 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 px-7 py-3 text-sm font-semibold text-white shadow-[0_0_25px_rgba(236,72,153,0.3)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_35px_rgba(236,72,153,0.5)] active:scale-95"
+                  className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-[#4a62b0]/30 bg-gradient-to-r from-[#4a62b0] via-violet-500 to-[#4a62b0] px-7 py-3 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(74,98,176,0.25)] transition-all duration-300 hover:scale-105 hover:shadow-[0_6px_28px_rgba(74,98,176,0.4)] active:scale-95"
                 >
-                  <Pencil className="w-4 h-4 text-pink-200" />
+                  <Pencil className="w-4 h-4 text-[#d3defa]" />
                   <span>Be the first to write a note ✨</span>
                 </button>
               </div>
 
               {/* Decorative wave at bottom */}
-              <div className="w-full overflow-hidden leading-none pt-2 opacity-40">
+              <div className="w-full overflow-hidden leading-none pt-2 opacity-30">
                 <svg
                   viewBox="0 0 1200 120"
                   preserveAspectRatio="none"
-                  className="relative block w-full h-4 text-[#120724]"
+                  className="relative block w-full h-4 text-[#d3defa]"
                 >
                   <path
                     d="M0,0 C150,90 350,-40 500,45 C650,130 900,-30 1200,30 L1200,120 L0,120 Z"
@@ -449,7 +451,7 @@ export default function WallOfLoveSection() {
                 </svg>
               </div>
 
-              <div className="flex items-center justify-center gap-2 pt-2 border-t border-purple-900/30 text-xs text-purple-300/50">
+              <div className="flex items-center justify-center gap-2 pt-2 border-t border-[#e4e8f2] text-xs text-[var(--color-muted)]">
                 <span>✨ This blank canvas is waiting for your kind words</span>
               </div>
             </motion.div>
@@ -500,7 +502,7 @@ export default function WallOfLoveSection() {
                       <button
                         onClick={() => handleDelete(note.id)}
                         title="Delete note"
-                        className="text-gray-500 hover:text-rose-400 p-1 rounded-full transition"
+                        className="text-[var(--color-muted)] hover:text-rose-500 p-1 rounded-full transition"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -509,7 +511,7 @@ export default function WallOfLoveSection() {
 
                   {/* Card Content Text */}
                   <div className="my-auto py-6 text-center">
-                    <p className="text-xl sm:text-2xl font-semibold tracking-wide text-white/95 leading-relaxed font-sans">
+                    <p className="text-xl sm:text-2xl font-semibold tracking-wide text-[var(--color-text)] leading-relaxed font-sans">
                       {note.content}
                     </p>
                   </div>
@@ -519,7 +521,7 @@ export default function WallOfLoveSection() {
                     <svg
                       viewBox="0 0 1200 120"
                       preserveAspectRatio="none"
-                      className="relative block w-full h-5 text-black/30"
+                      className="relative block w-full h-5"
                     >
                       <path
                         d="M0,0 C150,90 350,-40 500,45 C650,130 900,-30 1200,30 L1200,120 L0,120 Z"
@@ -529,29 +531,29 @@ export default function WallOfLoveSection() {
                   </div>
 
                   {/* Card Footer: User details & Like/Share actions */}
-                  <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
+                  <div className="flex items-center justify-between pt-3 border-t border-[#e4e8f2] text-xs">
                     <div className="flex items-center gap-3">
                       {note.user?.image ? (
                         <img
                           src={note.user.image}
                           alt={note.user?.name || "User avatar"}
-                          className="w-8 h-8 rounded-full ring-2 ring-white/20 object-cover"
+                          className="w-8 h-8 rounded-full ring-2 ring-[#d3defa]/60 object-cover"
                           onError={(e) => {
                             (e.currentTarget as HTMLElement).style.display = "none";
                           }}
                         />
                       ) : (
                         <div
-                          className={`w-8 h-8 rounded-full ${themeConfig.badgeBg} text-white flex items-center justify-center font-bold text-xs shadow-inner ring-2 ring-white/20`}
+                          className={`w-8 h-8 rounded-full ${themeConfig.badgeBg} text-white flex items-center justify-center font-bold text-xs shadow-inner ring-2 ring-white/60`}
                         >
                           {userInitial}
                         </div>
                       )}
                       <div>
-                        <h4 className="font-semibold text-white/90 leading-tight">
+                        <h4 className="font-semibold text-[var(--color-text)] leading-tight">
                           {note.user?.name || "Anonymous Friend"}
                         </h4>
-                        <p className="text-[11px] text-gray-400 font-light">
+                        <p className="text-[11px] text-[var(--color-muted)] font-light">
                           {formattedDate}
                         </p>
                       </div>
@@ -562,16 +564,16 @@ export default function WallOfLoveSection() {
                         onClick={() => handleLike(note.id)}
                         className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full transition active:scale-125 ${
                           isLiked
-                            ? "bg-pink-500/20 text-pink-300 ring-1 ring-pink-500/30"
-                            : "bg-white/5 hover:bg-white/15 text-gray-300 hover:text-pink-400"
+                            ? "bg-rose-100 text-rose-500 ring-1 ring-rose-300/50"
+                            : "bg-[#f7f9fd] hover:bg-[#eef1fb] text-[var(--color-muted)] hover:text-rose-500"
                         }`}
                         title={isLiked ? "Liked!" : "Like note"}
                       >
                         <Heart
                           className={`w-3.5 h-3.5 transition-colors ${
                             isLiked
-                              ? "fill-pink-500 text-pink-400"
-                              : "fill-pink-500/20 text-pink-400"
+                              ? "fill-rose-500 text-rose-500"
+                              : "fill-rose-200/40 text-rose-400"
                           }`}
                         />
                         <span className="text-xs font-medium">
@@ -580,7 +582,7 @@ export default function WallOfLoveSection() {
                       </button>
                       <button
                         onClick={() => handleShare(note)}
-                        className="p-1.5 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition"
+                        className="p-1.5 rounded-full hover:bg-[#eef1fb] text-[var(--color-muted)] hover:text-[#4a62b0] transition"
                         title="Share note"
                       >
                         <Share2 className="w-3.5 h-3.5" />
@@ -594,30 +596,30 @@ export default function WallOfLoveSection() {
         </div>
       </div>
 
-      {/* MODAL TO WRITE A NOTE / AUTHENTICATE */}
+      {/* ─── MODAL TO WRITE A NOTE / AUTHENTICATE ─── */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/25 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-lg rounded-3xl border border-purple-500/30 bg-[#160d26] p-6 sm:p-8 shadow-2xl text-white"
+              className="relative w-full max-w-lg rounded-3xl border border-[#e4e8f2] bg-white p-6 sm:p-8 shadow-[0_20px_60px_rgba(74,98,176,0.15)] text-[var(--color-text)]"
             >
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-5 right-5 p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition"
+                className="absolute top-5 right-5 p-2 rounded-full text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-[#f7f9fd] transition"
               >
                 <X className="w-5 h-5" />
               </button>
 
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 rounded-2xl bg-purple-600/20 text-purple-300 border border-purple-500/30">
+                <div className="p-3 rounded-2xl bg-[#eef1fb] text-[#4a62b0] border border-[#d3defa]/60">
                   <MessageCircle className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white">Leave your mark</h3>
-                  <p className="text-xs text-purple-300/70 font-light">
+                  <h3 className="text-xl font-semibold text-[var(--color-text)]">Leave your mark</h3>
+                  <p className="text-xs text-[var(--color-muted)] font-light">
                     Share a thought, compliment, or warm wish on the wall
                   </p>
                 </div>
@@ -626,14 +628,14 @@ export default function WallOfLoveSection() {
               {!session ? (
                 /* Prompt to sign in if not logged in */
                 <div className="text-center py-6 space-y-4">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300 shadow-[0_0_25px_rgba(168,85,247,0.25)]">
-                    <Heart className="w-7 h-7 text-pink-400 fill-pink-400/20 animate-pulse" />
+                  <div className="w-16 h-16 mx-auto rounded-full bg-[#eef1fb] border border-[#d3defa]/60 flex items-center justify-center text-[#4a62b0] shadow-[0_4px_20px_rgba(74,98,176,0.12)]">
+                    <Heart className="w-7 h-7 text-rose-400 fill-rose-200/40 animate-pulse" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-white">
+                    <h4 className="text-lg font-semibold text-[var(--color-text)]">
                       Sign in to leave your mark
                     </h4>
-                    <p className="text-xs sm:text-sm text-purple-300/70 max-w-xs mx-auto mt-1 font-light">
+                    <p className="text-xs sm:text-sm text-[var(--color-muted)] max-w-xs mx-auto mt-1 font-light">
                       Sign in with Google to post your message on the wall.
                     </p>
                   </div>
@@ -641,9 +643,9 @@ export default function WallOfLoveSection() {
                     <button
                       type="button"
                       onClick={() => signIn("google")}
-                      className="w-full flex items-center justify-center gap-3 rounded-2xl bg-white hover:bg-gray-100 text-gray-900 font-medium py-3 px-4 shadow-lg transition hover:scale-[1.02] active:scale-98 text-sm"
+                      className="w-full flex items-center justify-center gap-3 rounded-2xl bg-white hover:bg-[#f7f9fd] text-[var(--color-text)] font-medium py-3 px-4 border border-[#e4e8f2] shadow-sm transition hover:scale-[1.02] active:scale-98 text-sm"
                     >
-                      <FaGoogle className="w-4 h-4 text-emerald-600" />
+                      <FaGoogle className="w-4 h-4 text-emerald-500" />
                       <span>Continue with Google</span>
                     </button>
                   </div>
@@ -652,7 +654,7 @@ export default function WallOfLoveSection() {
                 /* Message form for authenticated users */
                 <form onSubmit={handleCreateNote} className="space-y-5">
                   <div>
-                    <label className="block text-xs font-medium text-purple-200 mb-2">
+                    <label className="block text-xs font-medium text-[var(--color-text)] mb-2">
                       Your Message
                     </label>
                     <textarea
@@ -661,11 +663,11 @@ export default function WallOfLoveSection() {
                       value={formContent}
                       onChange={(e) => setFormContent(e.target.value)}
                       placeholder="Write something heartwarming..."
-                      className="w-full rounded-2xl border border-purple-500/30 bg-purple-950/40 p-4 text-sm text-white placeholder-purple-300/40 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 resize-none"
+                      className="w-full rounded-2xl border border-[#e4e8f2] bg-[#f7f9fd] p-4 text-sm text-[var(--color-text)] placeholder-[var(--color-muted)]/50 focus:border-[#4a62b0] focus:outline-none focus:ring-2 focus:ring-[#4a62b0]/15 resize-none"
                       required
                     />
                     <div className="flex justify-end mt-1">
-                      <span className="text-[11px] text-gray-400">
+                      <span className="text-[11px] text-[var(--color-muted)]">
                         {formContent.length}/300
                       </span>
                     </div>
@@ -673,7 +675,7 @@ export default function WallOfLoveSection() {
 
                   {/* Theme Selector */}
                   <div>
-                    <label className="block text-xs font-medium text-purple-200 mb-2">
+                    <label className="block text-xs font-medium text-[var(--color-text)] mb-2">
                       Choose Card Theme
                     </label>
                     <div className="grid grid-cols-3 gap-2">
@@ -684,14 +686,14 @@ export default function WallOfLoveSection() {
                           onClick={() => setFormTheme(key)}
                           className={`flex items-center gap-2 rounded-xl p-2.5 text-xs font-medium transition border ${
                             formTheme === key
-                              ? "border-white bg-white/20 ring-2 ring-purple-400"
-                              : "border-white/10 bg-white/5 hover:bg-white/10"
+                              ? "border-[#4a62b0] bg-[#eef1fb] ring-2 ring-[#4a62b0]/30"
+                              : "border-[#e4e8f2] bg-[#f7f9fd] hover:bg-[#eef1fb] hover:border-[#d3defa]"
                           }`}
                         >
                           <span
                             className={`w-3.5 h-3.5 rounded-full ${cfg.badgeBg}`}
                           />
-                          <span className="truncate text-gray-200">
+                          <span className="truncate text-[var(--color-text)]">
                             {cfg.label}
                           </span>
                         </button>
@@ -701,7 +703,7 @@ export default function WallOfLoveSection() {
 
                   {/* Icon Selector */}
                   <div>
-                    <label className="block text-xs font-medium text-purple-200 mb-2">
+                    <label className="block text-xs font-medium text-[var(--color-text)] mb-2">
                       Choose Badge Icon
                     </label>
                     <div className="flex items-center gap-2">
@@ -712,8 +714,8 @@ export default function WallOfLoveSection() {
                           onClick={() => setFormIcon(key)}
                           className={`p-3 rounded-xl border transition ${
                             formIcon === key
-                              ? "border-purple-400 bg-purple-600/30 text-purple-200 ring-2 ring-purple-400/50"
-                              : "border-white/10 bg-white/5 text-gray-400 hover:text-white"
+                              ? "border-[#4a62b0] bg-[#eef1fb] text-[#4a62b0] ring-2 ring-[#4a62b0]/25"
+                              : "border-[#e4e8f2] bg-[#f7f9fd] text-[var(--color-muted)] hover:text-[#4a62b0] hover:bg-[#eef1fb]"
                           }`}
                         >
                           {iconNode}
@@ -726,7 +728,7 @@ export default function WallOfLoveSection() {
                   <button
                     type="submit"
                     disabled={submitting || !formContent.trim()}
-                    className="w-full mt-4 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 active:scale-98"
+                    className="w-full mt-4 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#4a62b0] to-violet-500 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_4px_16px_rgba(74,98,176,0.30)] transition hover:from-[#3a4f96] hover:to-violet-600 hover:shadow-[0_6px_24px_rgba(74,98,176,0.40)] disabled:opacity-50 active:scale-98"
                   >
                     {submitting ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -744,16 +746,16 @@ export default function WallOfLoveSection() {
         )}
       </AnimatePresence>
 
-      {/* TOAST NOTIFICATION */}
+      {/* ─── TOAST NOTIFICATION ─── */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 right-6 z-50 rounded-full border border-purple-400/30 bg-[#1c0c35] px-5 py-3 text-xs font-medium text-purple-100 shadow-2xl backdrop-blur-lg flex items-center gap-2"
+            className="fixed bottom-6 right-6 z-50 rounded-full border border-[#d3defa]/60 bg-white px-5 py-3 text-xs font-medium text-[var(--color-text)] shadow-[0_8px_30px_rgba(74,98,176,0.18)] backdrop-blur-lg flex items-center gap-2"
           >
-            <Sparkles className="w-4 h-4 text-pink-400" />
+            <Sparkles className="w-4 h-4 text-[#4a62b0]" />
             <span>{toastMessage}</span>
           </motion.div>
         )}

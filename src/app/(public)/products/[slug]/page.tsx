@@ -50,7 +50,7 @@ export default async function ProductDetailPage({ params }: Props) {
           </Heading>
           {product.price != null ? (
             <p className="mt-3 text-lg font-medium">
-              ${product.price.toFixed(2)}
+              ₹{product.price.toFixed(2)}
             </p>
           ) : null}
           {product.description ? (

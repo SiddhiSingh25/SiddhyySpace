@@ -44,7 +44,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </Text>
           ) : null}
           {product.price != null ? (
-            <p className="text-sm font-medium">${product.price.toFixed(2)}</p>
+            <p className="text-sm font-medium">₹{product.price.toFixed(2)}</p>
           ) : null}
         </div>
       </Link>
