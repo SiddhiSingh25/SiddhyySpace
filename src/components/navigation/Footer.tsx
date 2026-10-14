@@ -25,6 +25,9 @@ export function Footer() {
           <Link href="/playlists" className="text-foreground no-underline">
             Playlists
           </Link>
+          <Link href="/faq" className="text-foreground no-underline hover:text-link transition-colors">
+            FAQ
+          </Link>
         </div>
       </Container>
     </footer>

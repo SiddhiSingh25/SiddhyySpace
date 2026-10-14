@@ -59,17 +59,18 @@ export default async function ProductDetailPage({ params }: Props) {
               {product.description}
             </Text>
           ) : null}
-          {product.affiliate?.url ? (
-            <ButtonLink
-              href={product.affiliate.url}
-              className="mt-8"
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-            >
-              View product
-            </ButtonLink>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            {product.affiliate?.url ? (
+              <ButtonLink
+                href={product.affiliate.url}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+              >
+                View product
+              </ButtonLink>
+            ) : null}
             <ShareButton slug={slug} />
-          ) : null}
+          </div>
         </div>
       </Container>
     </Section>
