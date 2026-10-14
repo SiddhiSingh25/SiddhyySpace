@@ -3,7 +3,7 @@ export const siteConfig = {
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ??
     "A calm space for thoughtful writing, books, and recommendations.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://siddhyy-space-web.vercel.app",
   links: {
     twitter: "#",
     github: "#",

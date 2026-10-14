@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   verification: {
-    google: "jg-wRg0Kozsxu9l_311Z03saET-pMmv45c0T5GbfjMM",
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
     other: {
       "p:domain_verify": "f032574ce7f9f69c3b609ba01f20f795",
       "pinterest-site-verification": "f032574ce7f9f69c3b609ba01f20f795",
