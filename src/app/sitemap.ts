@@ -4,7 +4,6 @@ import { db } from "@/lib/db";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://siddhyy-space-web.vercel.app";
-  // const base = siteConfig.url;
 
   const staticRoutes: MetadataRoute.Sitemap = [
     "",
@@ -14,11 +13,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/playlists",
     "/celebrations",
     "/faq",
+    "/contact",
+    "/privacy-policy",
+    "/terms-and-conditions",
   ].map((path) => ({
     url: `${base}${path}`,
     lastModified: new Date(),
-    changeFrequency: path === "" || path === "/blogs" || path === "/products" ? ("weekly" as const) : ("monthly" as const),
-    priority: path === "" ? 1 : path === "/blogs" || path === "/products" || path === "/faq" ? 0.8 : 0.7,
+    changeFrequency:
+      path === "" || path === "/blogs" || path === "/products"
+        ? ("weekly" as const)
+        : ("monthly" as const),
+    priority:
+      path === ""
+        ? 1
+        : path === "/blogs" || path === "/products" || path === "/faq" || path === "/contact"
+          ? 0.8
+          : 0.6,
   }));
 
   try {
