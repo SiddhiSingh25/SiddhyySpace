@@ -5,6 +5,7 @@ import { Section } from "@/components/layout/Section";
 import { Heading } from "@/components/typography/Heading";
 import { Text } from "@/components/typography/Text";
 import { ButtonLink } from "@/components/ui/ButtonLink";
+import ShareButton from "@/components/ShareButton";
 import { getProductBySlug } from "@/features/products/services/product.service";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -32,10 +33,10 @@ export default async function ProductDetailPage({ params }: Props) {
           style={
             product.image
               ? {
-                  backgroundImage: `url(${product.image})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }
+                backgroundImage: `url(${product.image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
               : undefined
           }
         />
@@ -67,6 +68,7 @@ export default async function ProductDetailPage({ params }: Props) {
             >
               View product
             </ButtonLink>
+            <ShareButton slug={slug} />
           ) : null}
         </div>
       </Container>
