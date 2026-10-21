@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guards";
 import { errorResponse, successResponse } from "@/lib/api-response";
-import { uploadImage } from "@/services/cloudinary.service";
+import { uploadMedia } from "@/services/cloudinary.service";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -22,27 +22,34 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!file.type.startsWith("image/")) {
+    const isImage = file.type.startsWith("image/");
+    const isVideo = file.type.startsWith("video/");
+
+    if (!isImage && !isVideo) {
       return NextResponse.json(
-        errorResponse("Uploaded file must be an image (JPEG, PNG, WebP, etc.)."),
+        errorResponse("Uploaded file must be an image (PNG, JPG, WebP) or video (MP4, WebM, MOV)."),
         { status: 400 },
       );
     }
 
-    const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
-    if (file.size > MAX_SIZE_BYTES) {
+    const maxSizeBytes = isVideo ? 50 * 1024 * 1024 : 10 * 1024 * 1024; // 50MB for video, 10MB for image
+    if (file.size > maxSizeBytes) {
       return NextResponse.json(
-        errorResponse("Image file size exceeds the 10MB limit."),
+        errorResponse(`File size exceeds the ${isVideo ? "50MB" : "10MB"} limit.`),
         { status: 400 },
       );
     }
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const mimeType = file.type || "image/jpeg";
+    const mimeType = file.type || (isVideo ? "video/mp4" : "image/jpeg");
     const base64DataUri = `data:${mimeType};base64,${buffer.toString("base64")}`;
 
-    const uploadResult = await uploadImage(base64DataUri, folder);
+    const uploadResult = await uploadMedia(
+      base64DataUri,
+      folder,
+      isVideo ? "video" : "image",
+    );
 
     // Record the uploaded asset in the Media table
     try {
@@ -51,7 +58,7 @@ export async function POST(request: Request) {
           name: file.name,
           url: uploadResult.secure_url,
           publicId: uploadResult.public_id,
-          type: "IMAGE",
+          type: isVideo ? "VIDEO" : "IMAGE",
           width: uploadResult.width ?? null,
           height: uploadResult.height ?? null,
           size: uploadResult.bytes ?? file.size,
@@ -71,18 +78,20 @@ export async function POST(request: Request) {
           height: uploadResult.height,
           format: uploadResult.format,
           bytes: uploadResult.bytes,
+          mediaType: isVideo ? "video" : "image",
         },
-        "Image uploaded to Cloudinary successfully.",
+        `${isVideo ? "Video" : "Image"} uploaded successfully.`,
       ),
       { status: 201 },
     );
   } catch (err) {
     console.error("Cloudinary upload failed:", err);
     return NextResponse.json(
-      errorResponse("Failed to upload image to Cloudinary.", [
+      errorResponse("Failed to upload media to Cloudinary.", [
         err instanceof Error ? err.message : "Unknown error",
       ]),
       { status: 500 },
     );
   }
 }
+

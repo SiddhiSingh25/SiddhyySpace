@@ -8,10 +8,12 @@ import { Text } from "@/components/typography/Text";
 import { BlogCard } from "@/features/blog/components/BlogCard";
 import { TiptapRenderer } from "@/features/blog/components/TiptapRenderer";
 import { BlogEngagement } from "@/features/blog/components/BlogEngagement";
+import { ReadingProgressBar } from "@/features/blog/components/ReadingProgressBar";
 import {
   getBlogBySlug,
   getRelatedBlogs,
 } from "@/features/blog/services/blog.service";
+import { isVideoUrl, isDirectVideoUrl, toVideoEmbedUrl } from "@/utils/media";
 import { siteConfig } from "@/config/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -64,6 +66,7 @@ export default async function BlogDetailPage({ params }: Props) {
 
   return (
     <Section className="py-2 sm:py-3 lg:py-4">
+      <ReadingProgressBar />
       <Container>
         <script
           type="application/ld+json"
@@ -82,14 +85,37 @@ export default async function BlogDetailPage({ params }: Props) {
           {blog.readingTime} min read
         </Text>
         {blog.coverImage ? (
-          <div
-            className="mt-8 aspect-[16/9] rounded-2xl bg-primary/40"
-            style={{
-              backgroundImage: `url(${blog.coverImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          />
+          isVideoUrl(blog.coverImage) ? (
+            <div className="mt-8 aspect-[16/9] overflow-hidden rounded-2xl shadow-soft bg-black">
+              {isDirectVideoUrl(blog.coverImage) ? (
+                <video
+                  controls
+                  playsInline
+                  autoPlay
+                  muted
+                  loop
+                  src={blog.coverImage}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <iframe
+                  src={toVideoEmbedUrl(blog.coverImage)}
+                  className="h-full w-full"
+                  allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                />
+              )}
+            </div>
+          ) : (
+            <div
+              className="mt-8 aspect-[16/9] rounded-2xl bg-primary/40 shadow-soft"
+              style={{
+                backgroundImage: `url(${blog.coverImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+          )
         ) : null}
 
         <div className="prose-blog mt-10">

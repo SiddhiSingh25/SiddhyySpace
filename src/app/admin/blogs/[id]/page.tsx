@@ -3,16 +3,13 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
-import { Heading } from "@/components/typography/Heading";
+import { AdminHeader } from "@/features/admin/components/AdminHeader";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { CoverMediaUpload } from "@/features/admin/components/CoverMediaUpload";
 import { BlogEditor } from "@/features/admin/components/BlogEditor";
 import { useToast } from "@/providers/ToastProvider";
-
-const emptyDoc = {
-  type: "doc",
-  content: [{ type: "paragraph" }],
-};
+import { Trash2 } from "lucide-react";
 
 export default function EditBlogPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,23 +19,27 @@ export default function EditBlogPage() {
   const [excerpt, setExcerpt] = useState("");
   const [coverImage, setCoverImage] = useState("");
   const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">("DRAFT");
-  const [content, setContent] = useState<object>(emptyDoc);
+  const [content, setContent] = useState<unknown>("");
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function load() {
-      const { data } = await axios.get(`/api/admin/blogs/${id}`);
-      const blog = data.data;
-      setTitle(blog.title);
-      setExcerpt(blog.excerpt ?? "");
-      setCoverImage(blog.coverImage ?? "");
-      setStatus(blog.status);
-      setContent(blog.content ?? emptyDoc);
-      setReady(true);
+      try {
+        const { data } = await axios.get(`/api/admin/blogs/${id}`);
+        const blog = data.data;
+        setTitle(blog.title);
+        setExcerpt(blog.excerpt ?? "");
+        setCoverImage(blog.coverImage ?? "");
+        setStatus(blog.status);
+        setContent(blog.content ?? "");
+        setReady(true);
+      } catch {
+        toast({ tone: "error", title: "Could not load blog details." });
+      }
     }
     void load();
-  }, [id]);
+  }, [id, toast]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -62,40 +63,59 @@ export default function EditBlogPage() {
 
   async function onDelete() {
     if (!window.confirm("Soft-delete this blog?")) return;
-    await axios.delete(`/api/admin/blogs/${id}`);
-    toast({ tone: "success", title: "Blog deleted." });
-    router.push("/admin/blogs");
-    router.refresh();
+    try {
+      await axios.delete(`/api/admin/blogs/${id}`);
+      toast({ tone: "success", title: "Blog deleted." });
+      router.push("/admin/blogs");
+      router.refresh();
+    } catch {
+      toast({ tone: "error", title: "Could not delete blog." });
+    }
   }
 
   if (!ready) {
-    return <p className="text-muted">Loading editor…</p>;
+    return (
+      <div className="flex h-72 items-center justify-center text-sm text-muted">
+        Loading editor…
+      </div>
+    );
   }
 
   return (
-    <form onSubmit={onSubmit} className="mx-auto max-w-3xl space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <Heading as="h1">Edit blog</Heading>
-        <Button type="button" variant="danger" onClick={onDelete}>
+    <form onSubmit={onSubmit} className="mx-auto max-w-4xl space-y-6">
+      <AdminHeader
+        title="Edit blog"
+        description="Update article contents, media, settings, or delete this post."
+        backHref="/admin/blogs"
+        backLabel="Back to blogs"
+      >
+        <Button type="button" variant="danger" size="sm" onClick={onDelete}>
+          <Trash2 className="h-4 w-4 mr-1" />
           Delete
         </Button>
-      </div>
+      </AdminHeader>
+
       <Input
         label="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         required
       />
+
       <Input
         label="Excerpt"
         value={excerpt}
         onChange={(e) => setExcerpt(e.target.value)}
       />
-      <Input
-        label="Cover image URL"
+
+      <CoverMediaUpload
+        label="Cover Media (Image or Video)"
+        description="Choose a cover photo or video (MP4, YouTube, Vimeo) to showcase at the top of your blog."
         value={coverImage}
-        onChange={(e) => setCoverImage(e.target.value)}
+        onChange={setCoverImage}
+        folder="siddhyy-blogs"
       />
+
       <div className="space-y-1.5">
         <label className="block text-sm font-medium" htmlFor="status">
           Status
@@ -110,13 +130,24 @@ export default function EditBlogPage() {
           <option value="PUBLISHED">Published</option>
         </select>
       </div>
-      <div>
-        <p className="mb-2 text-sm font-medium">Content</p>
+
+      <div className="space-y-2">
+        <label className="block text-sm font-medium">Article Content</label>
         <BlogEditor key={id} value={content} onChange={setContent} />
       </div>
-      <Button type="submit" loading={loading}>
-        Save changes
-      </Button>
+
+      <div className="flex items-center justify-end gap-3 border-t border-border pt-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.push("/admin/blogs")}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" loading={loading}>
+          Save changes
+        </Button>
+      </div>
     </form>
   );
 }

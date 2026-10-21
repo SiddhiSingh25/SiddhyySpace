@@ -111,6 +111,20 @@ function renderNode(node: TipTapNode, index: number): ReactNode {
         </div>
       );
     }
+    case "video": {
+      const src = String(node.attrs?.src ?? "");
+      if (!src) return null;
+      return (
+        <div key={index} className="my-6 overflow-hidden rounded-2xl">
+          <video
+            controls
+            playsInline
+            src={src}
+            className="w-full rounded-2xl shadow-soft"
+          />
+        </div>
+      );
+    }
     case "text":
       return <span key={index}>{renderMarks(node.text ?? "", node.marks)}</span>;
     case "hardBreak":
@@ -121,8 +135,36 @@ function renderNode(node: TipTapNode, index: number): ReactNode {
 }
 
 export function TiptapRenderer({ content }: { content: unknown }) {
-  if (!content || typeof content !== "object") {
+  if (!content) {
     return <p className="text-muted">This article has no content yet.</p>;
   }
-  return <div>{renderNode(content as TipTapNode, 0)}</div>;
+
+  if (typeof content === "string") {
+    if (!content.trim()) {
+      return <p className="text-muted">This article has no content yet.</p>;
+    }
+    return (
+      <div
+        className="blog-content leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    );
+  }
+
+  if (typeof content === "object") {
+    if ("html" in (content as Record<string, unknown>)) {
+      const htmlStr = (content as Record<string, unknown>).html;
+      if (typeof htmlStr === "string" && htmlStr.trim()) {
+        return (
+          <div
+            className="blog-content leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: htmlStr }}
+          />
+        );
+      }
+    }
+    return <div>{renderNode(content as TipTapNode, 0)}</div>;
+  }
+
+  return <p className="text-muted">This article has no content yet.</p>;
 }
