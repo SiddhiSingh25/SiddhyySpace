@@ -1,8 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export function ClockBadge() {
+type ClockBadgeProps = {
+  className?: string;
+  compact?: boolean;
+};
+
+export function ClockBadge({ className, compact = false }: ClockBadgeProps) {
   const [time, setTime] = useState("");
 
   useEffect(() => {
@@ -20,8 +27,21 @@ export function ClockBadge() {
   }, []);
 
   return (
-    <span className="inline-flex items-center rounded-full border border-[#c5d0ef] bg-white/80 px-3.5 py-1.5 text-[13px] text-[#5a6280] shadow-sm backdrop-blur-sm">
-      India{time ? ` · ${time}` : ""}
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-surface/80 px-2.5 py-1 text-xs font-medium text-muted shadow-xs backdrop-blur-xs transition-colors hover:border-link/30 hover:text-foreground",
+        className
+      )}
+      title="India Standard Time (IST) · Asia/Kolkata"
+    >
+      <span className="relative flex h-1.5 w-1.5 shrink-0">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+      </span>
+      <Clock className="h-3 w-3 shrink-0 text-muted/70" />
+      <span className="tabular-nums tracking-tight">
+        {compact ? time || "IST" : `India${time ? ` · ${time}` : ""}`}
+      </span>
     </span>
   );
 }

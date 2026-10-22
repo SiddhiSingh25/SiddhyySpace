@@ -30,14 +30,14 @@ export function ReadingProgressBar() {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-50 h-1.5 bg-border/30 backdrop-blur-sm pointer-events-none"
+      className="fixed top-0 left-0 right-0 z-50 h-[2.5px] bg-primary/20 pointer-events-none"
       role="progressbar"
       aria-valuenow={Math.round(completion)}
       aria-valuemin={0}
       aria-valuemax={100}
     >
       <div
-        className="h-full bg-gradient-to-r from-link via-indigo-500 to-sky-400 transition-[width] duration-150 ease-out shadow-[0_0_10px_rgba(74,98,176,0.5)]"
+        className="h-full bg-gradient-to-r from-primary to-link transition-[width] duration-150 ease-out"
         style={{ width: `${completion}%` }}
       />
     </div>

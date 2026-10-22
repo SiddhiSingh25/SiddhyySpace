@@ -134,6 +134,12 @@ function renderNode(node: TipTapNode, index: number): ReactNode {
   }
 }
 
+function cleanContentHtml(html: string): string {
+  if (!html) return "";
+  // Replace non-breaking spaces with normal spaces so text wraps naturally across lines
+  return html.replace(/&nbsp;/g, " ").replace(/\u00a0/g, " ");
+}
+
 export function TiptapRenderer({ content }: { content: unknown }) {
   if (!content) {
     return <p className="text-muted">This article has no content yet.</p>;
@@ -146,24 +152,28 @@ export function TiptapRenderer({ content }: { content: unknown }) {
     return (
       <div
         className="blog-content leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: cleanContentHtml(content) }}
       />
     );
   }
 
-  if (typeof content === "object") {
+  if (typeof content === "object" && content !== null) {
     if ("html" in (content as Record<string, unknown>)) {
       const htmlStr = (content as Record<string, unknown>).html;
       if (typeof htmlStr === "string" && htmlStr.trim()) {
         return (
           <div
             className="blog-content leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: htmlStr }}
+            dangerouslySetInnerHTML={{ __html: cleanContentHtml(htmlStr) }}
           />
         );
       }
     }
-    return <div>{renderNode(content as TipTapNode, 0)}</div>;
+    return (
+      <div className="blog-content leading-relaxed">
+        {renderNode(content as TipTapNode, 0)}
+      </div>
+    );
   }
 
   return <p className="text-muted">This article has no content yet.</p>;
